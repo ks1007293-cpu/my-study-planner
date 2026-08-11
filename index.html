@@ -16,7 +16,6 @@
       gtag('config', 'G-QT9YJYY8Y1');
     </script>
 
-    <!-- Firebase App & Auth SDKs for Real OTP -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -74,7 +73,6 @@
         .header-brand-logo i { font-size: 32px; color: var(--primary); }
         .header-title h1 { font-size: 26px; font-weight: 800; color: var(--primary); }
 
-        /* LIVE WATCH CARD HEADER */
         .header-watch-card {
             background: #0F172A; color: #38BDF8; padding: 10px 18px; border-radius: 14px;
             display: flex; align-items: center; gap: 10px; font-family: monospace; font-size: 16px; font-weight: 800;
@@ -118,6 +116,11 @@
             background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
+        .item-list li.completed {
+            background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.7;
+        }
+        
+        .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 6px; }
         .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
@@ -125,7 +128,6 @@
         .cal-day { padding: 12px; background: rgba(0,0,0,0.02); border-radius: 10px; font-size: 13px; font-weight: 600; }
         .cal-day.active { background: var(--primary); color: white; }
 
-        /* GLOBAL LIVE COMMUNITY CHAT */
         .community-card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
         .community-header { background: var(--pw-gradient); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .chat-box { height: 380px; overflow-y: auto; padding: 20px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 15px; }
@@ -223,7 +225,7 @@
             <div class="dashboard-grid">
                 <div>
                     <div class="card">
-                        <div class="card-header">📅 Saved Classes Schedule</div>
+                        <div class="card-header">📅 Saved Classes Schedule (Start & End Time)</div>
                         <ul class="item-list" id="main-cls-list"></ul>
                     </div>
 
@@ -246,18 +248,21 @@
         <div id="tab-timetable" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
-                    <div class="card-header">Add Class Schedule</div>
+                    <div class="card-header">Add Class Schedule Range</div>
                     <form id="cls-form">
                         <div class="input-group">
                             <input type="text" id="cls-subject" placeholder="Subject Name (e.g. Maths PW)" required>
-                            <input type="text" id="cls-room" placeholder="Room No. / Teacher Link" required>
-                            <input type="time" id="cls-time" required>
+                            <input type="text" id="cls-room" placeholder="Topic / Room No." required>
+                            <label style="font-size: 12px; font-weight: bold; margin-top: 5px;">Shuru Hone Ka Time (Start Time):</label>
+                            <input type="time" id="cls-start-time" required>
+                            <label style="font-size: 12px; font-weight: bold; margin-top: 5px;">Khatam Hone Ka Time (End Time):</label>
+                            <input type="time" id="cls-end-time" required>
                         </div>
-                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Schedule</button>
+                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Class Range</button>
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-header">All Classes List</div>
+                    <div class="card-header">All Classes Schedule</div>
                     <ul class="item-list" id="cls-list"></ul>
                 </div>
             </div>
@@ -308,29 +313,11 @@
 
     </div>
 
-    <!-- REAL MOBILE PHONE OTP LOGIN MODAL -->
-    <div class="modal-overlay" id="login-modal">
-        <div class="modal-card">
-            <h3>📱 Real Mobile Number OTP Verification</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Enter your phone number to receive 6-Digit SMS OTP Code.</p>
-            
-            <div class="input-group" id="phone-step-box">
-                <input type="tel" id="user-phone-number" placeholder="+91 9876543210">
-                <button class="btn-call" style="width: 100%; justify-content: center;" onclick="sendRealPhoneOtp()">Send SMS OTP</button>
-            </div>
-
-            <div class="input-group" id="otp-step-box" style="display: none;">
-                <input type="number" id="user-otp-code" placeholder="Enter 6-Digit OTP Code">
-                <button class="btn-vip" style="width: 100%; justify-content: center;" onclick="verifyRealPhoneOtp()">Verify OTP Code & Login</button>
-            </div>
-        </div>
-    </div>
-
     <!-- CALL MODAL -->
     <div class="modal-overlay" id="incoming-call-modal">
         <div class="call-screen-card">
             <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px;"><i class="fa-solid fa-phone"></i></div>
-            <h3 style="font-size: 22px;">Study Coach Alert</h3>
+            <h3 style="font-size: 22px;" id="call-title">Study Coach Alert</h3>
             <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;" id="call-subtitle">Aapka Study Time Ho Gaya!</p>
 
             <div class="call-buttons-wrap">
@@ -367,33 +354,23 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        /* SYSTEM NOTIFICATION PERMISSION REQUEST FOR BACKGROUND CALL ALERTS */
-        if ("Notification" in window && Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-
         let callAudio = new Audio('https://actions.google.com/sounds/v1/ringtones/retro_phone_ring.ogg');
+        let currentVoiceMessage = "";
         
-        function triggerIncomingCallAlert(subject) {
-            document.getElementById('call-subtitle').innerText = `Time for ${subject} Class!`;
+        function triggerIncomingCallAlert(title, subtitle, voiceText) {
+            document.getElementById('call-title').innerText = title;
+            document.getElementById('call-subtitle').innerText = subtitle;
+            currentVoiceMessage = voiceText;
             openModal('incoming-call-modal');
             callAudio.loop = true;
             callAudio.play().catch(e => console.log(e));
-
-            // SYSTEM BACKGROUND NOTIFICATION CALL
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("📞 Incoming Study Call Alert!", {
-                    body: `Aapka time ho gaya hai! Kripya ${subject} class padhne aaiye.`,
-                    icon: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-                });
-            }
         }
 
         function answerCall() {
             callAudio.pause();
             closeModal('incoming-call-modal');
             if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance("Namaste! Aapka Study Session shuru ho gaya hai. Kripya padhai ke liye aa jaiye.");
+                const msg = new SpeechSynthesisUtterance(currentVoiceMessage || "Namaste! Aapka Study Session Shuru Ho Gaya Hai.");
                 msg.lang = 'hi-IN';
                 window.speechSynthesis.speak(msg);
             }
@@ -401,108 +378,38 @@
 
         function declineCall() { callAudio.pause(); closeModal('incoming-call-modal'); }
 
-        /* REALTIME CLASS CHECKER FOR CALL ALERTS */
+        /* REALTIME CHECKER FOR CLASS START & END TIME CALL ALERTS */
         setInterval(() => {
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
+            
             classes.forEach(c => {
-                if(c.time === currentTimeStr && now.getSeconds() === 0) {
-                    triggerIncomingCallAlert(c.name);
+                if(c.startTime === currentTimeStr && now.getSeconds() === 0) {
+                    triggerIncomingCallAlert("Class Start Alert!", `${c.name} Shuru Ho Gaya Hai!`, `Namaste! Aapka ${c.name} ka time shuru ho gaya hai. Padhne aaiye.`);
+                }
+                if(c.endTime === currentTimeStr && now.getSeconds() === 0) {
+                    triggerIncomingCallAlert("Class Finish Alert!", `${c.name} Ka Time Khatam Ho Gaya!`, `Aapka ${c.name} ka time khatam ho gaya hai. Bahut achha padha!`);
                 }
             });
         }, 1000);
 
-        /* FIREBASE PHONE OTP CONFIGURATION */
-        const firebaseConfig = {
-            apiKey: "AIzaSyDummyKey_ReplaceWithFirebaseAppKey",
-            authDomain: "my-study-planner.firebaseapp.com",
-            projectId: "my-study-planner",
-            storageBucket: "my-study-planner.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
-        };
-        if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-
-        let confirmationResultObj = null;
-
-        function sendRealPhoneOtp() {
-            const phone = document.getElementById('user-phone-number').value;
-            if(!phone || phone.length < 10) { alert("Please enter valid phone number (+91)!"); return; }
-            
-            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
-            
-            firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
-                .then((result) => {
-                    confirmationResultObj = result;
-                    document.getElementById('phone-step-box').style.display = 'none';
-                    document.getElementById('otp-step-box').style.display = 'flex';
-                    showToast("SMS OTP Sent Successfully!");
-                }).catch((err) => {
-                    showToast("OTP Verification Demo Mode Active (Enter code 123456)");
-                    confirmationResultObj = "DEMO_MODE";
-                    document.getElementById('phone-step-box').style.display = 'none';
-                    document.getElementById('otp-step-box').style.display = 'flex';
-                });
-        }
-
-        function verifyRealPhoneOtp() {
-            const code = document.getElementById('user-otp-code').value;
-            if(confirmationResultObj === "DEMO_MODE" && code === "123456") {
-                localStorage.setItem('study_user_email', "Verified Student");
-                closeModal('login-modal');
-                showToast("Phone OTP Verified & Logged In!");
-            } else if(confirmationResultObj && confirmationResultObj !== "DEMO_MODE") {
-                confirmationResultObj.confirm(code).then((res) => {
-                    localStorage.setItem('study_user_email', res.user.phoneNumber);
-                    closeModal('login-modal');
-                    showToast("Verified & Logged In!");
-                }).catch(() => alert("Invalid OTP Code!"));
-            } else {
-                alert("Incorrect OTP Code!");
-            }
-        }
-
-        /* GLOBAL COMMUNITY SYNC */
-        let globalPosts = JSON.parse(localStorage.getItem('global_community_posts') || '[]');
-
-        function renderCommunityPosts() {
-            const box = document.getElementById('community-chat-box');
-            if(!box) return;
-            box.innerHTML = '';
-            globalPosts.forEach(p => {
-                box.innerHTML += `
-                    <div class="chat-bubble">
-                        <div class="author">${p.name} <span style="background:#2563EB; color:white; font-size:10px; padding:2px 6px; border-radius:6px;">Student</span></div>
-                        <p style="font-size: 14px;">${p.text}</p>
-                    </div>
-                `;
-            });
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function postPublicDoubt() {
-            const txt = document.getElementById('comm-msg-input').value;
-            const name = document.getElementById('comm-user-realname').value || "Class Student";
-            if(txt) {
-                globalPosts.push({ name: name, text: txt });
-                localStorage.setItem('global_community_posts', JSON.stringify(globalPosts));
-                document.getElementById('comm-msg-input').value = '';
-                renderCommunityPosts();
-                showToast("Doubt Posted Globally!");
-            }
-        }
-        renderCommunityPosts();
-
-        /* CLASSES & TASKS */
+        /* CLASSES WITH START & END TIME + DONE FEATURE */
         document.getElementById('cls-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            classes.push({ id: Date.now(), name: document.getElementById('cls-subject').value, room: document.getElementById('cls-room').value, time: document.getElementById('cls-time').value });
+            classes.push({
+                id: Date.now(),
+                name: document.getElementById('cls-subject').value,
+                room: document.getElementById('cls-room').value,
+                startTime: document.getElementById('cls-start-time').value,
+                endTime: document.getElementById('cls-end-time').value,
+                done: false
+            });
             localStorage.setItem('user_classes', JSON.stringify(classes));
             e.target.reset();
             renderClasses();
-            showToast("Class Saved!");
+            showToast("Class Schedule Range Saved!");
         });
 
         function renderClasses() {
@@ -513,11 +420,33 @@
             if(mainList) mainList.innerHTML = '';
 
             classes.forEach(c => {
-                const html = `<li><div><strong>${c.name}</strong> (${c.time})<br><small style="color:var(--text-muted);">${c.room}</small></div><button class="btn-del" onclick="delCls(${c.id})">Delete</button></li>`;
+                const html = `
+                    <li class="${c.done ? 'completed' : ''}">
+                        <div>
+                            <strong>${c.name}</strong> (${c.startTime} se ${c.endTime})<br>
+                            <small style="color:var(--text-muted);">${c.room}</small>
+                        </div>
+                        <div>
+                            <button class="btn-done" onclick="toggleClsDone(${c.id})">${c.done ? '✓ Done' : 'Mark Done'}</button>
+                            <button class="btn-del" onclick="delCls(${c.id})">Delete</button>
+                        </div>
+                    </li>`;
                 if(list) list.innerHTML += html;
                 if(mainList) mainList.innerHTML += html;
             });
         }
+
+        function toggleClsDone(id) {
+            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
+            classes = classes.map(c => {
+                if(c.id === id) c.done = !c.done;
+                return c;
+            });
+            localStorage.setItem('user_classes', JSON.stringify(classes));
+            renderClasses();
+            showToast("Status Updated!");
+        }
+
         function delCls(id) {
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]').filter(c => c.id !== id);
             localStorage.setItem('user_classes', JSON.stringify(classes));
@@ -525,10 +454,11 @@
         }
         renderClasses();
 
+        /* TASKS WITH DONE FEATURE */
         document.getElementById('task-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
-            tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value });
+            tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value, done: false });
             localStorage.setItem('user_tasks', JSON.stringify(tasks));
             e.target.reset();
             renderTasks();
@@ -543,11 +473,30 @@
             if(dashList) dashList.innerHTML = '';
 
             tasks.forEach(t => {
-                const html = `<li><div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div><button class="btn-del" onclick="delTask(${t.id})">Done</button></li>`;
+                const html = `
+                    <li class="${t.done ? 'completed' : ''}">
+                        <div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div>
+                        <div>
+                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Completed' : 'Mark Done'}</button>
+                            <button class="btn-del" onclick="delTask(${t.id})">Delete</button>
+                        </div>
+                    </li>`;
                 if(list) list.innerHTML += html;
                 if(dashList) dashList.innerHTML += html;
             });
         }
+
+        function toggleTaskDone(id) {
+            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            tasks = tasks.map(t => {
+                if(t.id === id) t.done = !t.done;
+                return t;
+            });
+            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            renderTasks();
+            showToast("Task Complete Status Updated!");
+        }
+
         function delTask(id) {
             let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]').filter(t => t.id !== id);
             localStorage.setItem('user_tasks', JSON.stringify(tasks));
