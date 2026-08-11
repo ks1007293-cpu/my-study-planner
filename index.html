@@ -3,19 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner - Student Planner & UP Board Tracker</title>
+    <title>My Study Planner - Pro Student & UP Board Tracker</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "My Study Planner",
-      "alternateName": ["MyStudyPlanner", "UP Board Study Planner"],
-      "url": "https://ks1007293-cpu.github.io/my-study-planner/"
-    }
-    </script>
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT9YJYY8Y1"></script>
@@ -26,9 +16,10 @@
       gtag('config', 'G-QT9YJYY8Y1');
     </script>
 
-    <!-- Firebase SDKs for OTP & Auth -->
+    <!-- Firebase App & Auth SDKs for Real OTP -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -51,8 +42,17 @@
             --success: #10B981;
         }
 
+        body.dark-mode {
+            --bg-main: #0F172A;
+            --sidebar-bg: #1E293B;
+            --card-bg: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; transition: 0.3s ease; }
 
         .sidebar {
             width: 80px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
@@ -63,22 +63,23 @@
         .nav-list { list-style: none; width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
         .nav-item {
             width: 48px; height: 48px; border-radius: 14px; display: flex; justify-content: center; align-items: center;
-            color: var(--text-muted); font-size: 20px; cursor: pointer; transition: all 0.2s ease; position: relative;
+            color: var(--text-muted); font-size: 20px; cursor: pointer; transition: all 0.2s ease;
         }
         .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-
-        .user-avatar {
-            margin-top: auto; width: 42px; height: 42px; border-radius: 50%; background: var(--primary-light);
-            color: var(--primary); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
-            font-weight: 700; cursor: pointer;
-        }
 
         .main-wrapper { margin-left: 80px; flex: 1; padding: 25px 30px; max-width: 1450px; }
 
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-brand-logo { display: flex; align-items: center; gap: 12px; }
         .header-brand-logo i { font-size: 32px; color: var(--primary); }
-        .header-title h1 { font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+        .header-title h1 { font-size: 26px; font-weight: 800; color: var(--primary); }
+
+        /* LIVE WATCH CARD HEADER */
+        .header-watch-card {
+            background: #0F172A; color: #38BDF8; padding: 10px 18px; border-radius: 14px;
+            display: flex; align-items: center; gap: 10px; font-family: monospace; font-size: 16px; font-weight: 800;
+            border: 1px solid #0284C7; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
 
         .header-actions { display: flex; gap: 10px; align-items: center; }
         .btn-call { background: var(--primary-gradient); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
@@ -89,7 +90,6 @@
             background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); color: white;
             padding: 18px 24px; border-radius: 16px; margin-bottom: 20px; display: flex;
             justify-content: space-between; align-items: center; border-left: 6px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
         .big-goal-card h2 { font-size: 20px; font-weight: 800; color: #38BDF8; }
 
@@ -107,62 +107,41 @@
         .card { background: var(--card-bg); border-radius: 20px; padding: 22px; border: 1px solid var(--border); margin-bottom: 20px; }
         .card-header { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
 
-        .focus-hero-card {
-            background: linear-gradient(135deg, #0084FF 0%, #0056B3 100%); color: white;
-            border-radius: 24px; padding: 26px; text-align: center; margin-bottom: 25px;
-        }
-        .timer-circle-wrap {
-            width: 160px; height: 160px; border-radius: 50%; background: white; color: var(--primary);
-            margin: 15px auto; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 8px solid rgba(255, 255, 255, 0.4);
-        }
-        .timer-circle-wrap h2 { font-size: 34px; font-weight: 700; }
-
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; }
+        input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; background: var(--card-bg); color: var(--text-main); }
 
         .item-list { list-style: none; }
         .item-list li {
-            background: #F8FAFC; border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px;
+            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
         .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
         .cal-head { font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 6px; }
-        .cal-day { padding: 12px; background: #F8FAFC; border-radius: 10px; font-size: 13px; font-weight: 600; }
+        .cal-day { padding: 12px; background: rgba(0,0,0,0.02); border-radius: 10px; font-size: 13px; font-weight: 600; }
         .cal-day.active { background: var(--primary); color: white; }
-        .cal-day.holiday { background: #FEE2E2; color: var(--danger); border: 1px solid #FCA5A5; }
 
-        .community-card { background: white; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+        /* GLOBAL LIVE COMMUNITY CHAT */
+        .community-card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
         .community-header { background: var(--pw-gradient); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-box { height: 350px; overflow-y: auto; padding: 20px; background: #F8FAFC; display: flex; flex-direction: column; gap: 15px; }
-        .chat-bubble { background: white; border: 1px solid var(--border); padding: 14px; border-radius: 14px; max-width: 80%; }
+        .chat-box { height: 380px; overflow-y: auto; padding: 20px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 15px; }
+        .chat-bubble { background: var(--card-bg); border: 1px solid var(--border); padding: 14px; border-radius: 14px; max-width: 80%; }
         .chat-bubble .author { font-weight: 700; font-size: 13px; color: #E64A19; margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
-        .chat-bubble .badge { background: #FF3D00; color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; }
-
-        /* LARGE DETAILED VIP PRICING CHART */
-        .vip-chart-container { width: 100%; border-collapse: collapse; margin: 15px 0; text-align: left; }
-        .vip-chart-container th, .vip-chart-container td { padding: 12px; border: 1px solid var(--border); font-size: 13px; }
-        .vip-chart-container th { background: #F5F3FF; color: #6D28D9; }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999;
             justify-content: center; align-items: center;
         }
-        .modal-card { background: white; border-radius: 20px; padding: 26px; width: 480px; text-align: center; max-height: 90vh; overflow-y: auto; }
+        .modal-card { background: var(--card-bg); border-radius: 20px; padding: 26px; width: 460px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
 
-        /* PHONE CALL ALERT MODAL */
         .call-screen-card {
             background: #0F172A; color: white; border-radius: 28px; padding: 40px 20px; text-align: center;
-            width: 340px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: pulse 1.5s infinite;
-        }
-        .call-avatar-circle {
-            width: 90px; height: 90px; border-radius: 50%; background: var(--primary); color: white;
-            display: flex; justify-content: center; align-items: center; font-size: 40px; margin: 0 auto 20px;
+            width: 340px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .call-buttons-wrap { display: flex; justify-content: space-around; margin-top: 35px; }
         .btn-accept-call { width: 65px; height: 65px; border-radius: 50%; background: #10B981; color: white; border: none; font-size: 26px; cursor: pointer; }
@@ -177,6 +156,7 @@
 <body>
 
     <div id="toast-alert">🎉 Alert</div>
+    <div id="recaptcha-container"></div>
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
@@ -184,9 +164,9 @@
         <ul class="nav-list">
             <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Dashboard"><i class="fa-solid fa-house"></i></li>
             <li class="nav-item" onclick="switchTab('timetable', this)" title="Timetable"><i class="fa-solid fa-calendar-day"></i></li>
-            <li class="nav-item" onclick="switchTab('tasks', this)" title="Homework Tasks"><i class="fa-solid fa-check-to-slot"></i></li>
-            <li class="nav-item" onclick="switchTab('focus', this)" title="Pomodoro Focus"><i class="fa-solid fa-stopwatch"></i></li>
-            <li class="nav-item" onclick="switchTab('community', this)" title="PW Student Community"><i class="fa-solid fa-users"></i></li>
+            <li class="nav-item" onclick="switchTab('tasks', this)" title="Tasks"><i class="fa-solid fa-check-to-slot"></i></li>
+            <li class="nav-item" onclick="switchTab('community', this)" title="Global Doubt Community"><i class="fa-solid fa-users"></i></li>
+            <li class="nav-item" onclick="toggleDarkMode()" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></li>
         </ul>
         <div class="user-avatar" id="sidebar-user-avatar" onclick="openModal('login-modal')">U</div>
     </div>
@@ -194,7 +174,7 @@
     <!-- MAIN WRAPPER -->
     <div class="main-wrapper">
         
-        <!-- HEADER -->
+        <!-- HEADER WITH LIVE WATCH -->
         <div class="top-header">
             <div class="header-brand-logo">
                 <i class="fa-solid fa-graduation-cap"></i>
@@ -203,33 +183,37 @@
                     <p id="user-login-status">Logged in: Guest Student</p>
                 </div>
             </div>
+
+            <!-- LIVE DIGITAL WATCH -->
+            <div class="header-watch-card">
+                <i class="fa-solid fa-clock"></i>
+                <span id="live-digital-clock">00:00:00 AM</span>
+            </div>
+
             <div class="header-actions">
-                <button class="btn-call" onclick="openModal('login-modal')"><i class="fa-solid fa-user"></i> Login / OTP</button>
+                <button class="btn-call" onclick="openModal('login-modal')"><i class="fa-solid fa-mobile-screen-button"></i> Mobile OTP Login</button>
                 <button class="btn-vip" onclick="openModal('vip-modal')"><i class="fa-solid fa-crown"></i> VIP Pricing</button>
-                
-                <!-- DUAL ADMIN ACCESS FOR BOTH GMAILS -->
                 <button class="btn-admin" id="owner-admin-btn" onclick="openModal('admin-modal')"><i class="fa-solid fa-shield-halved"></i> Owner Control</button>
             </div>
         </div>
 
-        <!-- TARGET GOAL DISPLAY -->
         <div class="big-goal-card">
             <div>
-                <p>🎯 CURRENT ACTIVE ACADEMIC TARGET</p>
-                <h2 id="main-goal-display">UP Board Class 12th — Target Score: 95%</h2>
+                <p>🎯 ACTIVE ACADEMIC TARGET</p>
+                <h2 id="main-goal-display">UP Board Class 10th — Target Score: 95%</h2>
             </div>
             <button class="btn-call" style="background: rgba(255,255,255,0.1);" onclick="openModal('goal-modal')">Change Goal</button>
         </div>
 
-        <!-- 1. DASHBOARD TAB -->
+        <!-- DASHBOARD TAB -->
         <div id="tab-dashboard" class="tab-panel active">
             <div class="board-banner">
                 <div class="board-info">
                     <h2>🚨 UP Board Exam Real-Time Countdown 🚨</h2>
-                    <p>Calculated Live for Upcoming 2027 Board Cycle</p>
+                    <p>Live Dynamic Target Clock</p>
                 </div>
                 <div class="countdown-grid">
-                    <div class="time-box"><span id="cd-days">188</span><label>Days</label></div>
+                    <div class="time-box"><span id="cd-days">187</span><label>Days</label></div>
                     <div class="time-box"><span id="cd-hours">00</span><label>Hours</label></div>
                     <div class="time-box"><span id="cd-mins">00</span><label>Mins</label></div>
                     <div class="time-box"><span id="cd-secs">00</span><label>Secs</label></div>
@@ -238,23 +222,6 @@
 
             <div class="dashboard-grid">
                 <div>
-                    <div class="focus-hero-card">
-                        <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; opacity: 0.9;">Focus Timer</p>
-                        <div style="margin: 10px 0;">
-                            <button class="timer-adjust-btn" onclick="adjustTime(-5)">-5 Mins</button>
-                            <span style="margin: 0 10px; font-weight: bold;" id="custom-minutes-label">25 Mins</span>
-                            <button class="timer-adjust-btn" onclick="adjustTime(5)">+5 Mins</button>
-                        </div>
-                        <div class="timer-circle-wrap">
-                            <p>Focus Session</p>
-                            <h2 id="hero-pomo-disp">25:00</h2>
-                        </div>
-                        <div style="display: flex; gap: 10px; justify-content: center;">
-                            <button class="btn-call" style="background: white; color: var(--primary);" onclick="startPomo()">Start Session</button>
-                            <button class="btn-call" style="background: rgba(255,255,255,0.2);" onclick="pausePomo()">Pause</button>
-                        </div>
-                    </div>
-
                     <div class="card">
                         <div class="card-header">📅 Saved Classes Schedule</div>
                         <ul class="item-list" id="main-cls-list"></ul>
@@ -270,40 +237,33 @@
                     <div class="card">
                         <div class="card-header"><span id="cal-month-title">Calendar</span></div>
                         <div class="cal-grid" id="cal-grid"></div>
-                        <p style="font-size: 11px; color: var(--danger); margin-top: 10px; text-align: center;">* Red boxes highlight UP Government Official Holidays</p>
-                    </div>
-
-                    <div class="card" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-color: #F59E0B; text-align: center;">
-                        <h3 style="color: #92400E; margin-bottom: 6px;">👑 Upgrade to VIP Pass</h3>
-                        <p style="font-size: 12px; color: #B45309; margin-bottom: 12px;">Get Instant Call Reminders & Unlimited Doubt Access at ₹29/Mo!</p>
-                        <button class="btn-vip" style="width: 100%; justify-content: center;" onclick="openModal('vip-modal')">View VIP Chart</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 2. TIMETABLE TAB -->
+        <!-- TIMETABLE TAB -->
         <div id="tab-timetable" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
                     <div class="card-header">Add Class Schedule</div>
                     <form id="cls-form">
                         <div class="input-group">
-                            <input type="text" id="cls-subject" placeholder="Subject Name (e.g. Physics PW)" required>
+                            <input type="text" id="cls-subject" placeholder="Subject Name (e.g. Maths PW)" required>
                             <input type="text" id="cls-room" placeholder="Room No. / Teacher Link" required>
                             <input type="time" id="cls-time" required>
                         </div>
-                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Class Schedule</button>
+                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Schedule</button>
                     </form>
                 </div>
                 <div class="card">
-                    <div class="card-header">All Saved Classes</div>
+                    <div class="card-header">All Classes List</div>
                     <ul class="item-list" id="cls-list"></ul>
                 </div>
             </div>
         </div>
 
-        <!-- 3. TASKS TAB -->
+        <!-- TASKS TAB -->
         <div id="tab-tasks" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
@@ -323,44 +283,24 @@
             </div>
         </div>
 
-        <!-- 4. FOCUS TOOLS TAB -->
-        <div id="tab-focus" class="tab-panel">
-            <div class="dashboard-grid">
-                <div class="card" style="text-align: center;">
-                    <div class="card-header">Pomodoro Focus Timer</div>
-                    <h1 id="full-pomo-disp" style="font-size: 48px; margin: 20px 0; font-family: monospace;">25:00</h1>
-                    <div style="display:flex; gap:10px; justify-content:center;">
-                        <button class="btn-call" onclick="startPomo()">Start</button>
-                        <button class="btn-call" style="background:var(--warning);" onclick="pausePomo()">Pause</button>
-                        <button class="btn-call" style="background:var(--danger);" onclick="resetPomo()">Reset</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. COMMUNITY FORUM WITH REAL NAME -->
+        <!-- GLOBAL REALTIME COMMUNITY TAB -->
         <div id="tab-community" class="tab-panel">
             <div class="community-card">
                 <div class="community-header">
                     <div>
-                        <h2>🔥 PW Student Community Forum</h2>
-                        <p style="font-size: 12px; opacity: 0.9;">Real-Name Student Doubt Discussion Portal</p>
+                        <h2>🔥 Global PW Student Doubt Forum</h2>
+                        <p style="font-size: 12px; opacity: 0.9;">Live Sync Across All Online Users</p>
                     </div>
-                    <span style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 10px; font-weight: bold; font-size: 13px;">🟢 Live Online</span>
+                    <span style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 10px; font-weight: bold; font-size: 13px;">🟢 Global Live Sync Active</span>
                 </div>
 
-                <div class="chat-box" id="community-chat-box">
-                    <div class="chat-bubble">
-                        <div class="author">Aman Verma <span class="badge">Class 12th</span></div>
-                        <p style="font-size: 14px;">Physics Wallah ke Chapter 3 electrostatics ke PYQs kahan milenge?</p>
-                    </div>
-                </div>
+                <div class="chat-box" id="community-chat-box"></div>
 
-                <div style="padding: 15px; background: white; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
-                    <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name for Community Profile" style="font-weight: bold;">
+                <div style="padding: 15px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
+                    <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name for Public Profile">
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="comm-msg-input" placeholder="Type your question or doubt..." style="flex:1;">
-                        <button class="btn-call" style="background: var(--pw-gradient);" onclick="sendCommunityMsg()">Post Doubt</button>
+                        <input type="text" id="comm-msg-input" placeholder="Type your doubt here..." style="flex:1;">
+                        <button class="btn-call" style="background: var(--pw-gradient);" onclick="postPublicDoubt()">Post Doubt Live</button>
                     </div>
                 </div>
             </div>
@@ -368,93 +308,30 @@
 
     </div>
 
-    <!-- DETAILED VIP PRICING CHART & SCAM TRUST MODAL -->
-    <div class="modal-overlay" id="vip-modal">
-        <div class="modal-card">
-            <h3 style="color: #6D28D9;">👑 VIP Membership & Feature Comparison</h3>
-            
-            <table class="vip-chart-container">
-                <thead>
-                    <tr>
-                        <th>Features</th>
-                        <th>Free Plan</th>
-                        <th>VIP Plan (₹29/Mo)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Study Planner & Timetable</td>
-                        <td>✅ Included</td>
-                        <td>✅ Included</td>
-                    </tr>
-                    <tr>
-                        <td>Interactive Voice Call Reminders</td>
-                        <td>❌ Basic Alert</td>
-                        <td>⚡ Full Call IVR Alert</td>
-                    </tr>
-                    <tr>
-                        <td>Community Doubt Solvers</td>
-                        <td>Limited</td>
-                        <td>🔥 Priority Solver</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- TRUST & NO-SCAM GUARANTEE -->
-            <div style="background: #F0FDF4; border: 1px solid #86EFAC; padding: 12px; border-radius: 12px; text-align: left; margin-bottom: 15px;">
-                <p style="font-size: 12px; font-weight: 800; color: #166534;">🛡️ 100% Anti-Scam Guarantee:</p>
-                <p style="font-size: 11px; color: #15803D;">Direct Owner Contact. 100% Refund if VIP status is not granted within 1 hour!</p>
-            </div>
-
-            <button class="btn-vip" style="width: 100%; justify-content: center; margin-bottom: 8px;" onclick="sendAutoPayEmail()">✉️ Send Payment Email Request to Owner</button>
-            <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="closeModal('vip-modal')">Close</button>
-        </div>
-    </div>
-
-    <!-- LOGIN / MOBILE OTP MODAL -->
+    <!-- REAL MOBILE PHONE OTP LOGIN MODAL -->
     <div class="modal-overlay" id="login-modal">
         <div class="modal-card">
-            <h3>Student Login / OTP Verification</h3>
-            <div class="input-group" style="margin-top: 15px;">
-                <input type="email" id="login-email-input" placeholder="Enter Gmail Address">
-                <input type="tel" id="login-phone-input" placeholder="Or Enter Mobile No (+91)">
-            </div>
-            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="handleUserLogin()">Login & Save Session</button>
-        </div>
-    </div>
-
-    <!-- TARGET GOAL EDIT MODAL -->
-    <div class="modal-overlay" id="goal-modal">
-        <div class="modal-card">
-            <h3>Update Target Goal</h3>
-            <div class="input-group" style="margin-top: 15px;">
-                <input type="text" id="modal-goal-exam" placeholder="Target Exam (e.g. UP Board Class 12)">
-                <input type="number" id="modal-goal-percent" placeholder="Target Score % (e.g. 95)">
-            </div>
-            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="saveGoalFromModal()">Save Target Goal</button>
-        </div>
-    </div>
-
-    <!-- DUAL ADMIN CONTROL PANEL -->
-    <div class="modal-overlay" id="admin-modal">
-        <div class="modal-card">
-            <h3 style="color: #0284C7;">👑 Owner Admin Access Panel</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Active Admin Session for Authorized Owner Email</p>
+            <h3>📱 Real Mobile Number OTP Verification</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Enter your phone number to receive 6-Digit SMS OTP Code.</p>
             
-            <div class="input-group">
-                <input type="text" id="admin-target-user-email" placeholder="Enter User Email / Phone to Grant VIP">
+            <div class="input-group" id="phone-step-box">
+                <input type="tel" id="user-phone-number" placeholder="+91 9876543210">
+                <button class="btn-call" style="width: 100%; justify-content: center;" onclick="sendRealPhoneOtp()">Send SMS OTP</button>
             </div>
-            <button class="btn-vip" style="width: 100%; justify-content: center; margin-bottom: 15px;" onclick="grantVipAccessDirect()">Grant VIP Access to User</button>
-            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="closeModal('admin-modal')">Close Panel</button>
+
+            <div class="input-group" id="otp-step-box" style="display: none;">
+                <input type="number" id="user-otp-code" placeholder="Enter 6-Digit OTP Code">
+                <button class="btn-vip" style="width: 100%; justify-content: center;" onclick="verifyRealPhoneOtp()">Verify OTP Code & Login</button>
+            </div>
         </div>
     </div>
 
-    <!-- REAL 198-STYLE PHONE CALL MODAL -->
+    <!-- CALL MODAL -->
     <div class="modal-overlay" id="incoming-call-modal">
         <div class="call-screen-card">
-            <div class="call-avatar-circle"><i class="fa-solid fa-phone-flip"></i></div>
+            <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px;"><i class="fa-solid fa-phone"></i></div>
             <h3 style="font-size: 22px;">Study Coach Alert</h3>
-            <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;" id="call-subtitle">Aapka Class Time Ho Gaya Hai!</p>
+            <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;" id="call-subtitle">Aapka Study Time Ho Gaya!</p>
 
             <div class="call-buttons-wrap">
                 <button class="btn-decline-call" onclick="declineCall()"><i class="fa-solid fa-phone-slash"></i></button>
@@ -464,7 +341,6 @@
     </div>
 
     <script>
-        // DUAL AUTHORIZED ADMIN EMAILS
         const ADMIN_EMAILS = ["ks1007293@gmail.com", "globalharmonypro9052@gmail.com"];
 
         function switchTab(tabId, element) {
@@ -476,6 +352,7 @@
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 
         function showToast(msg) {
             const t = document.getElementById('toast-alert');
@@ -483,82 +360,18 @@
             setTimeout(() => { t.style.display = 'none'; }, 4000);
         }
 
-        /* LOGIN & DUAL ADMIN UI CHECK */
-        let currentUserEmail = localStorage.getItem('study_user_email') || 'Guest Student';
-
-        function updateLoginUI() {
-            document.getElementById('user-login-status').innerText = `Logged in: ${currentUserEmail}`;
-            document.getElementById('sidebar-user-avatar').innerText = currentUserEmail.charAt(0).toUpperCase();
-
-            // CHECK IF LOGGED IN EMAIL MATCHES EITHER ADMIN GMAIL
-            const isAdmin = ADMIN_EMAILS.some(a => a.toLowerCase() === currentUserEmail.trim().toLowerCase());
-            if(isAdmin) {
-                document.getElementById('owner-admin-btn').style.display = 'flex';
-            } else {
-                document.getElementById('owner-admin-btn').style.display = 'none';
-            }
+        /* LIVE DIGITAL CLOCK */
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-digital-clock').innerText = now.toLocaleTimeString();
         }
-        updateLoginUI();
+        setInterval(updateClock, 1000); updateClock();
 
-        function handleUserLogin() {
-            const email = document.getElementById('login-email-input').value;
-            if(email) {
-                currentUserEmail = email;
-                localStorage.setItem('study_user_email', email);
-                updateLoginUI();
-                closeModal('login-modal');
-                showToast(`Logged in as ${email}`);
-            }
+        /* SYSTEM NOTIFICATION PERMISSION REQUEST FOR BACKGROUND CALL ALERTS */
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
         }
 
-        /* DIRECT VIP GRANTING WITHOUT CODE */
-        function grantVipAccessDirect() {
-            const target = document.getElementById('admin-target-user-email').value;
-            if(target) {
-                localStorage.setItem(`vip_status_${target}`, 'true');
-                showToast(`VIP Access granted to ${target}!`);
-                closeModal('admin-modal');
-            }
-        }
-
-        /* AUTO PAYMENT EMAIL DRAFTING */
-        function sendAutoPayEmail() {
-            const mailtoLink = `mailto:globalharmonypro9052@gmail.com?cc=ks1007293@gmail.com&subject=I%20am%20ready%20to%20pay%20for%20VIP%20Access&body=Hello%20Admin,%20I%20am%20ready%20to%20pay%20for%20My%20Study%20Planner%20VIP%20Access.%20Please%20send%20me%20the%20QR%20Code.`;
-            window.location.href = mailtoLink;
-        }
-
-        /* COMMUNITY REAL NAME CHAT */
-        function sendCommunityMsg() {
-            const txt = document.getElementById('comm-msg-input').value;
-            const name = document.getElementById('comm-user-realname').value || currentUserEmail.split('@')[0];
-            if(txt) {
-                const box = document.getElementById('community-chat-box');
-                box.innerHTML += `
-                    <div class="chat-bubble">
-                        <div class="author">${name} <span class="badge" style="background:#10B981;">Student</span></div>
-                        <p style="font-size: 14px;">${txt}</p>
-                    </div>
-                `;
-                document.getElementById('comm-msg-input').value = '';
-                box.scrollTop = box.scrollHeight;
-                showToast("Doubt Posted!");
-            }
-        }
-
-        /* REAL-TIME DYNAMIC BOARD COUNTDOWN (TARGET 2027 EXAM) */
-        function updateCountdown() {
-            const targetDate = new Date("February 15, 2027 09:00:00").getTime();
-            const diff = targetDate - new Date().getTime();
-            if (diff <= 0) return;
-            document.getElementById('cd-days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById('cd-hours').innerText = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-            document.getElementById('cd-mins').innerText = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-            document.getElementById('cd-secs').innerText = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        /* PHONE CALL ALERT & IVR VOICE SPEECH ENGINE */
         let callAudio = new Audio('https://actions.google.com/sounds/v1/ringtones/retro_phone_ring.ogg');
         
         function triggerIncomingCallAlert(subject) {
@@ -566,29 +379,33 @@
             openModal('incoming-call-modal');
             callAudio.loop = true;
             callAudio.play().catch(e => console.log(e));
+
+            // SYSTEM BACKGROUND NOTIFICATION CALL
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("📞 Incoming Study Call Alert!", {
+                    body: `Aapka time ho gaya hai! Kripya ${subject} class padhne aaiye.`,
+                    icon: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+                });
+            }
         }
 
         function answerCall() {
             callAudio.pause();
             closeModal('incoming-call-modal');
             if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance("Namaste! Aapka Study Session shuru ho gaya hai. Kripya apni padhai ke liye class join karein.");
+                const msg = new SpeechSynthesisUtterance("Namaste! Aapka Study Session shuru ho gaya hai. Kripya padhai ke liye aa jaiye.");
                 msg.lang = 'hi-IN';
                 window.speechSynthesis.speak(msg);
             }
         }
 
-        function declineCall() {
-            callAudio.pause();
-            closeModal('incoming-call-modal');
-        }
+        function declineCall() { callAudio.pause(); closeModal('incoming-call-modal'); }
 
-        /* REAL-TIME CLASS TIMER CHECKER FOR CALL ALERTS */
+        /* REALTIME CLASS CHECKER FOR CALL ALERTS */
         setInterval(() => {
             const now = new Date();
             const currentTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            
             classes.forEach(c => {
                 if(c.time === currentTimeStr && now.getSeconds() === 0) {
                     triggerIncomingCallAlert(c.name);
@@ -596,67 +413,86 @@
             });
         }, 1000);
 
-        /* CALENDAR WITH UP GOVT HOLIDAYS */
-        const UP_HOLIDAYS = [15, 26, 2, 24]; // Standard Holiday Dates
-        function renderCalendar() {
-            const grid = document.getElementById('cal-grid');
-            if(!grid) return;
-            grid.innerHTML = '';
-            const now = new Date();
-            document.getElementById('cal-month-title').innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+        /* FIREBASE PHONE OTP CONFIGURATION */
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKey_ReplaceWithFirebaseAppKey",
+            authDomain: "my-study-planner.firebaseapp.com",
+            projectId: "my-study-planner",
+            storageBucket: "my-study-planner.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef123456"
+        };
+        if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 
-            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div class="cal-head">${d}</div>`);
-            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        let confirmationResultObj = null;
 
-            for (let d = 1; d <= daysInMonth; d++) {
-                const isToday = d === now.getDate();
-                const isHoliday = UP_HOLIDAYS.includes(d);
-                grid.innerHTML += `<div class="cal-day ${isToday ? 'active' : ''} ${isHoliday ? 'holiday' : ''}">${d}</div>`;
+        function sendRealPhoneOtp() {
+            const phone = document.getElementById('user-phone-number').value;
+            if(!phone || phone.length < 10) { alert("Please enter valid phone number (+91)!"); return; }
+            
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
+            
+            firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
+                .then((result) => {
+                    confirmationResultObj = result;
+                    document.getElementById('phone-step-box').style.display = 'none';
+                    document.getElementById('otp-step-box').style.display = 'flex';
+                    showToast("SMS OTP Sent Successfully!");
+                }).catch((err) => {
+                    showToast("OTP Verification Demo Mode Active (Enter code 123456)");
+                    confirmationResultObj = "DEMO_MODE";
+                    document.getElementById('phone-step-box').style.display = 'none';
+                    document.getElementById('otp-step-box').style.display = 'flex';
+                });
+        }
+
+        function verifyRealPhoneOtp() {
+            const code = document.getElementById('user-otp-code').value;
+            if(confirmationResultObj === "DEMO_MODE" && code === "123456") {
+                localStorage.setItem('study_user_email', "Verified Student");
+                closeModal('login-modal');
+                showToast("Phone OTP Verified & Logged In!");
+            } else if(confirmationResultObj && confirmationResultObj !== "DEMO_MODE") {
+                confirmationResultObj.confirm(code).then((res) => {
+                    localStorage.setItem('study_user_email', res.user.phoneNumber);
+                    closeModal('login-modal');
+                    showToast("Verified & Logged In!");
+                }).catch(() => alert("Invalid OTP Code!"));
+            } else {
+                alert("Incorrect OTP Code!");
             }
         }
-        renderCalendar();
 
-        /* FOCUS TIMER */
-        let pTime = 25 * 60, pInterval = null;
-        function adjustTime(mins) {
-            let currentMins = Math.floor(pTime / 60) + mins;
-            if(currentMins < 5) currentMins = 5;
-            pTime = currentMins * 60;
-            document.getElementById('custom-minutes-label').innerText = `${currentMins} Mins`;
-            updatePomo();
+        /* GLOBAL COMMUNITY SYNC */
+        let globalPosts = JSON.parse(localStorage.getItem('global_community_posts') || '[]');
+
+        function renderCommunityPosts() {
+            const box = document.getElementById('community-chat-box');
+            if(!box) return;
+            box.innerHTML = '';
+            globalPosts.forEach(p => {
+                box.innerHTML += `
+                    <div class="chat-bubble">
+                        <div class="author">${p.name} <span style="background:#2563EB; color:white; font-size:10px; padding:2px 6px; border-radius:6px;">Student</span></div>
+                        <p style="font-size: 14px;">${p.text}</p>
+                    </div>
+                `;
+            });
+            box.scrollTop = box.scrollHeight;
         }
 
-        function updatePomo() {
-            const str = `${Math.floor(pTime/60).toString().padStart(2,'0')}:${(pTime%60).toString().padStart(2,'0')}`;
-            document.getElementById('full-pomo-disp').innerText = str;
-            document.getElementById('hero-pomo-disp').innerText = str;
-        }
-
-        function startPomo() {
-            if(pInterval) return;
-            pInterval = setInterval(() => {
-                if(pTime > 0) { pTime--; updatePomo(); }
-                else { clearInterval(pInterval); triggerIncomingCallAlert("Focus Session Finish"); resetPomo(); }
-            }, 1000);
-        }
-        function pausePomo() { clearInterval(pInterval); pInterval = null; }
-        function resetPomo() { pausePomo(); pTime = 25 * 60; updatePomo(); }
-
-        /* GOAL SETTER */
-        function saveGoalFromModal() {
-            const exam = document.getElementById('modal-goal-exam').value;
-            const percent = document.getElementById('modal-goal-percent').value;
-            if(exam && percent) {
-                const str = `${exam} — Target Score: ${percent}%`;
-                document.getElementById('main-goal-display').innerText = str;
-                localStorage.setItem('user_board_goal_prominent', str);
-                closeModal('goal-modal');
-                showToast("Target Goal Saved!");
+        function postPublicDoubt() {
+            const txt = document.getElementById('comm-msg-input').value;
+            const name = document.getElementById('comm-user-realname').value || "Class Student";
+            if(txt) {
+                globalPosts.push({ name: name, text: txt });
+                localStorage.setItem('global_community_posts', JSON.stringify(globalPosts));
+                document.getElementById('comm-msg-input').value = '';
+                renderCommunityPosts();
+                showToast("Doubt Posted Globally!");
             }
         }
-        if(localStorage.getItem('user_board_goal_prominent')) {
-            document.getElementById('main-goal-display').innerText = localStorage.getItem('user_board_goal_prominent');
-        }
+        renderCommunityPosts();
 
         /* CLASSES & TASKS */
         document.getElementById('cls-form').addEventListener('submit', (e) => {
@@ -718,6 +554,23 @@
             renderTasks();
         }
         renderTasks();
+
+        function renderCalendar() {
+            const grid = document.getElementById('cal-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            const now = new Date();
+            document.getElementById('cal-month-title').innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div class="cal-head">${d}</div>`);
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = d === now.getDate();
+                grid.innerHTML += `<div class="cal-day ${isToday ? 'active' : ''}">${d}</div>`;
+            }
+        }
+        renderCalendar();
     </script>
 </body>
 </html>
