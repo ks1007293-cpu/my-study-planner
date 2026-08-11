@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Study Planner - Student Planner & UP Board Tracker</title>
-
-    <!-- 🟢 IS LINE PAR GOOGLE SEARCH CONSOLE KA META TAG PASTE KAREIN (Approx Line 8-10) -->
-    <meta name="google-site-verification" content="XYZ_YOUR_VERIFICATION_CODE_HERE" />
-
-    <!-- Google Fonts & FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner - Student Planner & UP Board Tracker</title>
     
+    <!-- Google Search Console Meta Verification -->
+    <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
+
+    <!-- Google Analytics (gtag.js) - G-QT9YJYY8Y1 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT9YJYY8Y1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-QT9YJYY8Y1');
+    </script>
+
     <!-- Google Fonts & FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,7 +45,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        /* Sidebar Navigation */
         .sidebar {
             width: 80px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
             display: flex; flex-direction: column; align-items: center; padding: 20px 0; position: fixed; height: 100vh; z-index: 100;
@@ -56,9 +57,6 @@
             color: var(--text-muted); font-size: 20px; cursor: pointer; transition: all 0.2s ease; position: relative;
         }
         .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
-        .nav-item.premium-lock::after {
-            content: "👑"; font-size: 10px; position: absolute; top: 4px; right: 4px;
-        }
 
         .user-avatar {
             margin-top: auto; width: 42px; height: 42px; border-radius: 50%; background: var(--primary-light);
@@ -66,42 +64,29 @@
             font-weight: 700; cursor: pointer;
         }
 
-        /* Main Workspace Container */
         .main-wrapper { margin-left: 80px; flex: 1; padding: 25px 30px; max-width: 1450px; }
 
-        /* Top Bar & Adsense Container */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-title h1 { font-size: 26px; font-weight: 700; color: var(--text-main); }
         .header-title p { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
 
         .header-actions { display: flex; gap: 12px; }
-        .btn-call { background: var(--primary-gradient); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25); }
-        .btn-premium { background: var(--premium-gradient); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25); }
+        .btn-call { background: var(--primary-gradient); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-premium { background: var(--premium-gradient); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
-        /* Ad Banner Placement */
-        .adsense-banner-container {
-            width: 100%; background: #E2E8F0; border: 1px dashed #94A3B8; border-radius: 12px;
-            padding: 10px; text-align: center; margin-bottom: 20px; font-size: 12px; color: var(--text-muted);
-        }
-
-        /* UP Board 188-Day Countdown Banner */
         .board-banner {
             background: var(--primary-gradient); color: white; border-radius: 20px; padding: 24px 30px;
             margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
         }
         .board-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-        .board-info p { opacity: 0.9; font-size: 14px; }
 
         .countdown-grid { display: flex; gap: 12px; }
         .time-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 10px 16px; border-radius: 14px; text-align: center; min-width: 70px; }
         .time-box span { font-size: 24px; font-weight: 700; display: block; }
         .time-box label { font-size: 10px; text-transform: uppercase; opacity: 0.8; font-weight: 600; }
 
-        /* Dashboard Grid Layout */
         .dashboard-grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 25px; }
-
-        .card { background: var(--card-bg); border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02); }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 24px; border: 1px solid var(--border); }
         .card-header { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
 
         .focus-hero-card {
@@ -110,8 +95,7 @@
         }
         .timer-circle-wrap {
             width: 170px; height: 170px; border-radius: 50%; background: white; color: var(--primary);
-            margin: 15px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 8px solid rgba(255, 255, 255, 0.4);
+            margin: 15px auto; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 8px solid rgba(255, 255, 255, 0.4);
         }
         .timer-circle-wrap h2 { font-size: 36px; font-weight: 700; }
 
@@ -119,14 +103,11 @@
         .stat-card { background: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--border); }
         .stat-card h3 { font-size: 24px; font-weight: 700; margin-top: 5px; }
 
-        /* Tabs System */
         .tab-panel { display: none; }
-        .tab-panel.active { display: block; animation: fadeIn 0.2s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-panel.active { display: block; }
 
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         input, select { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--primary); }
 
         .item-list { list-style: none; }
         .item-list li {
@@ -146,6 +127,7 @@
             justify-content: center; align-items: center;
         }
         .modal-card { background: white; border-radius: 20px; padding: 30px; width: 380px; text-align: center; }
+        .timer-adjust-btn { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -155,14 +137,13 @@
         <a href="#" class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></a>
         
         <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Dashboard"><i class="fa-solid fa-house"></i></li>
-            <li class="nav-item" onclick="switchTab('timetable', this)" title="Schedule"><i class="fa-solid fa-calendar-day"></i></li>
-            <li class="nav-item" onclick="switchTab('tasks', this)" title="Tasks"><i class="fa-solid fa-check-to-slot"></i></li>
-            <li class="nav-item" onclick="switchTab('focus', this)" title="Focus Timer"><i class="fa-solid fa-stopwatch"></i></li>
-            <li class="nav-item premium-lock" onclick="openModal('premium-modal')" title="Pro Analytics"><i class="fa-solid fa-chart-line"></i></li>
+            <li class="nav-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-house"></i></li>
+            <li class="nav-item" onclick="switchTab('timetable', this)"><i class="fa-solid fa-calendar-day"></i></li>
+            <li class="nav-item" onclick="switchTab('tasks', this)"><i class="fa-solid fa-check-to-slot"></i></li>
+            <li class="nav-item" onclick="switchTab('focus', this)"><i class="fa-solid fa-stopwatch"></i></li>
         </ul>
 
-        <div class="user-avatar" onclick="openModal('login-modal')" title="Profile Account">U</div>
+        <div class="user-avatar" onclick="openModal('login-modal')">U</div>
     </div>
 
     <!-- MAIN WRAPPER -->
@@ -178,18 +159,6 @@
                 <button class="btn-premium" onclick="openModal('premium-modal')"><i class="fa-solid fa-crown"></i> Get Premium</button>
                 <button class="btn-call" onclick="openModal('call-modal')"><i class="fa-solid fa-phone"></i> Study Call</button>
             </div>
-        </div>
-
-        <!-- GOOGLE ADSENSE DISPLAY SLOT -->
-        <div class="adsense-banner-container">
-            <!-- AdSense Responsive Ad Unit -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
         <!-- 1. DASHBOARD TAB -->
@@ -211,9 +180,15 @@
             <div class="dashboard-grid">
                 <div>
                     <div class="focus-hero-card">
-                        <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; opacity: 0.9;">Focus Goal Today</p>
-                        <h3 style="font-size: 22px; margin-top: 2px;">Ready to Ace Your Board Exams?</h3>
+                        <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; opacity: 0.9;">Set Study Duration</p>
                         
+                        <!-- TIMER CONTROLS -->
+                        <div style="margin: 10px 0;">
+                            <button class="timer-adjust-btn" onclick="adjustTime(-5)">-5 Mins</button>
+                            <span style="margin: 0 10px; font-weight: bold;" id="custom-minutes-label">25 Mins</span>
+                            <button class="timer-adjust-btn" onclick="adjustTime(5)">+5 Mins</button>
+                        </div>
+
                         <div class="timer-circle-wrap">
                             <p>Focus</p>
                             <h2 id="hero-pomo-disp">25:00</h2>
@@ -225,6 +200,7 @@
                         </div>
                     </div>
 
+                    <!-- STREAK COUNTER DISPLAY -->
                     <div class="stats-grid">
                         <div class="stat-card">
                             <p style="font-size: 12px; color: var(--text-muted);">👀 Pending Homework</p>
@@ -232,7 +208,10 @@
                         </div>
                         <div class="stat-card">
                             <p style="font-size: 12px; color: var(--text-muted);">🔥 Study Streak</p>
-                            <h3>5 Days</h3>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                                <h3 id="streak-display">7 Days</h3>
+                                <button onclick="addStreakDay()" style="padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer;">+1 Day</button>
+                            </div>
                         </div>
                     </div>
 
@@ -258,14 +237,16 @@
                     </div>
                 </div>
             </div>
-        </div><!-- 2. TIMETABLE TAB -->
+        </div>
+
+        <!-- 2. TIMETABLE TAB -->
         <div id="tab-timetable" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
                     <div class="card-header">Add Class Schedule</div>
                     <form id="cls-form">
                         <div class="input-group">
-                            <input type="text" id="cls-subject" placeholder="Subject Name (e.g., Physics)" required>
+                            <input type="text" id="cls-subject" placeholder="Subject Name" required>
                             <input type="text" id="cls-room" placeholder="Room No. / Link" required>
                             <input type="time" id="cls-time" required>
                         </div>
@@ -326,57 +307,27 @@
 
     </div>
 
-    <!-- CALL MODAL POPUP -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="call-modal">
         <div class="modal-card">
-            <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 15px;">📞</div>
-            <h3 style="font-size: 20px;">Study Coach Alert</h3>
-            <p style="color: var(--text-muted); font-size: 14px; margin: 10px 0 20px;">"Padhai Shuru Karo! UP Board Exam me Exact 188 Days Baki Hain!"</p>
+            <h3>Study Coach Alert</h3>
+            <p style="color: var(--text-muted); margin: 10px 0 20px;">"Padhai Shuru Karo! UP Board Exam me Exact 188 Days Baki Hain!"</p>
             <button class="btn-call" style="width: 100%; justify-content: center;" onclick="closeModal('call-modal')">Accept & Start Studying</button>
         </div>
     </div>
 
-    <!-- LOGIN MODAL WITH FIREBASE -->
     <div class="modal-overlay" id="login-modal">
         <div class="modal-card">
-            <h3 style="font-size: 20px; margin-bottom: 15px;">Student Portal Login</h3>
+            <h3>Student Portal Login</h3>
             <div class="input-group">
                 <input type="text" placeholder="Username / Email">
                 <input type="password" placeholder="Password">
             </div>
-            <button class="btn-call" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="closeModal('login-modal')">Login with Firebase</button>
-            <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="closeModal('login-modal')">Cancel</button>
+            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="closeModal('login-modal')">Login with Firebase</button>
         </div>
     </div>
-
-    <!-- PREMIUM SUBSCRIPTION MODAL -->
-    <div class="modal-overlay" id="premium-modal">
-        <div class="modal-card">
-            <div style="width: 60px; height: 60px; background: #FEF3C7; color: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 15px;">👑</div>
-            <h3 style="font-size: 20px;">Upgrade to Pro Plan</h3>
-            <p style="color: var(--text-muted); font-size: 14px; margin: 10px 0 20px;">Get Unlimited Cloud Sync, Ad-Free Experience & Advanced Analytics.</p>
-            <button class="btn-premium" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="closeModal('premium-modal')">Subscribe ₹99/Month</button>
-            <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;" onclick="closeModal('premium-modal')">Maybe Later</button>
-        </div>
-    </div>
-
-    <!-- FIREBASE SDK & APP LOGIC -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "my-study-planner.firebaseapp.com",
-            projectId: "my-study-planner",
-            storageBucket: "my-study-planner.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456"
-        };
-        firebase.initializeApp(firebaseConfig);
-
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -402,6 +353,42 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
+        // Custom Timer Duration Logic
+        let pTime = 25 * 60, pInterval = null;
+        function adjustTime(mins) {
+            let currentMins = Math.floor(pTime / 60) + mins;
+            if(currentMins < 5) currentMins = 5;
+            pTime = currentMins * 60;
+            document.getElementById('custom-minutes-label').innerText = `${currentMins} Mins`;
+            updatePomo();
+        }
+
+        function updatePomo() {
+            const str = `${Math.floor(pTime/60).toString().padStart(2,'0')}:${(pTime%60).toString().padStart(2,'0')}`;
+            document.getElementById('full-pomo-disp').innerText = str;
+            document.getElementById('hero-pomo-disp').innerText = str;
+        }
+
+        function startPomo() {
+            if(pInterval) return;
+            pInterval = setInterval(() => {
+                if(pTime > 0) { pTime--; updatePomo(); }
+                else { clearInterval(pInterval); alert('Focus session complete!'); resetPomo(); }
+            }, 1000);
+        }
+        function pausePomo() { clearInterval(pInterval); pInterval = null; }
+        function resetPomo() { pausePomo(); pTime = 25 * 60; updatePomo(); }
+
+        // Streak Management Logic
+        let currentStreak = parseInt(localStorage.getItem('user_streak') || '7');
+        document.getElementById('streak-display').innerText = `${currentStreak} Days`;
+
+        function addStreakDay() {
+            currentStreak++;
+            localStorage.setItem('user_streak', currentStreak);
+            document.getElementById('streak-display').innerText = `${currentStreak} Days`;
+        }
+
         // Goal Setter
         function saveGoal() {
             const exam = document.getElementById('goal-exam-input').value;
@@ -415,7 +402,7 @@
         }
         if(localStorage.getItem('user_board_goal')) document.getElementById('user-goal-subtitle').innerText = localStorage.getItem('user_board_goal');
 
-        // Tasks / Homework Manager
+        // Task & Class Managers
         document.getElementById('task-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
@@ -431,9 +418,7 @@
             const dashList = document.getElementById('dash-tasks');
             if(list) list.innerHTML = '';
             if(dashList) dashList.innerHTML = '';
-            
-            const pendingEl = document.getElementById('pending-count');
-            if(pendingEl) pendingEl.innerText = tasks.length;
+            document.getElementById('pending-count').innerText = tasks.length;
 
             tasks.forEach(t => {
                 const html = `<li><div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div><button class="btn-del" onclick="delTask(${t.id})">Done</button></li>`;
@@ -448,39 +433,13 @@
         }
         renderTasks();
 
-        // Timetable Manager
-        document.getElementById('cls-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            classes.push({ id: Date.now(), name: document.getElementById('cls-subject').value, room: document.getElementById('cls-room').value, time: document.getElementById('cls-time').value });
-            localStorage.setItem('user_classes', JSON.stringify(classes));
-            e.target.reset();
-            renderClasses();
-        });
-
-        function renderClasses() {
-            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            const list = document.getElementById('cls-list');
-            if(list) list.innerHTML = '';
-            classes.forEach(c => {
-                if(list) list.innerHTML += `<li><div><strong>${c.name}</strong> (${c.time})<br><small style="color:var(--text-muted);">${c.room}</small></div><button class="btn-del" onclick="delCls(${c.id})">Delete</button></li>`;
-            });
-        }
-        function delCls(id) {
-            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]').filter(c => c.id !== id);
-            localStorage.setItem('user_classes', JSON.stringify(classes));
-            renderClasses();
-        }
-        renderClasses();
-
         // Calendar Render
         function renderCalendar() {
             const grid = document.getElementById('cal-grid');
             if(!grid) return;
             grid.innerHTML = '';
             const now = new Date();
-            const calTitle = document.getElementById('cal-month-title');
-            if(calTitle) calTitle.innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
+            document.getElementById('cal-month-title').innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
 
             ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div class="cal-head">${d}</div>`);
             const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -492,25 +451,6 @@
         }
         renderCalendar();
 
-        // Pomodoro Timer Logic
-        let pTime = 25 * 60, pInterval = null;
-        function updatePomo() {
-            const str = `${Math.floor(pTime/60).toString().padStart(2,'0')}:${(pTime%60).toString().padStart(2,'0')}`;
-            const fullPomo = document.getElementById('full-pomo-disp');
-            const heroPomo = document.getElementById('hero-pomo-disp');
-            if(fullPomo) fullPomo.innerText = str;
-            if(heroPomo) heroPomo.innerText = str;
-        }
-        function startPomo() {
-            if(pInterval) return;
-            pInterval = setInterval(() => {
-                if(pTime > 0) { pTime--; updatePomo(); }
-                else { clearInterval(pInterval); alert('Focus session complete!'); resetPomo(); }
-            }, 1000);
-        }
-        function pausePomo() { clearInterval(pInterval); pInterval = null; }
-        function resetPomo() { pausePomo(); pTime = 25 * 60; updatePomo(); }
-
         // Stopwatch Logic
         let sTime = 0, sInterval = null;
         function startSw() {
@@ -520,12 +460,11 @@
                 const h = Math.floor(sTime/3600).toString().padStart(2,'0');
                 const m = Math.floor((sTime%3600)/60).toString().padStart(2,'0');
                 const s = (sTime%60).toString().padStart(2,'0');
-                const swDisp = document.getElementById('sw-disp');
-                if(swDisp) swDisp.innerText = `${h}:${m}:${s}`;
+                document.getElementById('sw-disp').innerText = `${h}:${m}:${s}`;
             }, 1000);
         }
         function pauseSw() { clearInterval(sInterval); sInterval = null; }
-        function resetSw() { pauseSw(); sTime = 0; const swDisp = document.getElementById('sw-disp'); if(swDisp) swDisp.innerText = "00:00:00"; }
+        function resetSw() { pauseSw(); sTime = 0; document.getElementById('sw-disp').innerText = "00:00:00"; }
     </script>
 </body>
 </html>
