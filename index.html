@@ -8,6 +8,17 @@
     <!-- Google Search Console Verification Meta -->
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
+    <!-- Schema.org Site Name for Google Search Indexing -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "My Study Planner",
+      "alternateName": ["MyStudyPlanner", "UP Board Study Planner"],
+      "url": "https://ks1007293-cpu.github.io/my-study-planner/"
+    }
+    </script>
+
     <!-- Google Analytics Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT9YJYY8Y1"></script>
     <script>
@@ -62,8 +73,11 @@
 
         .main-wrapper { margin-left: 80px; flex: 1; padding: 25px 30px; max-width: 1450px; }
 
+        /* HEADER BRANDING LOGO */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-title h1 { font-size: 26px; font-weight: 700; color: var(--text-main); }
+        .header-brand-logo { display: flex; align-items: center; gap: 12px; }
+        .header-brand-logo i { font-size: 32px; color: var(--primary); }
+        .header-title h1 { font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
         .header-title p { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
 
         .header-actions { display: flex; gap: 12px; }
@@ -128,7 +142,7 @@
 </head>
 <body>
 
-    <!-- LEFT SIDEBAR -->
+    <!-- LEFT SIDEBAR LOGO -->
     <div class="sidebar">
         <a href="#" class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></a>
         <ul class="nav-list">
@@ -142,13 +156,18 @@
 
     <!-- MAIN WRAPPER -->
     <div class="main-wrapper">
+        
+        <!-- HEADER WITH LOGO AND APP NAME -->
         <div class="top-header">
-            <div class="header-title">
-                <h1>My Study Planner</h1>
-                <p id="user-goal-subtitle">Target Goal: UP Board Class 12th (95% Target)</p>
+            <div class="header-brand-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <div class="header-title">
+                    <h1>My Study Planner</h1>
+                    <p id="user-goal-subtitle">Target Goal: UP Board Class 12th (95% Target)</p>
+                </div>
             </div>
             <div class="header-actions">
-                <button class="btn-premium" onclick="openModal('premium-modal')"><i class="fa-solid fa-crown"></i> Get Premium</button>
+                <button class="btn-premium" onclick="openModal('login-modal')"><i class="fa-solid fa-crown"></i> Get Premium</button>
                 <button class="btn-call" onclick="openModal('call-modal')"><i class="fa-solid fa-phone"></i> Study Call</button>
             </div>
         </div>
