@@ -16,6 +16,7 @@
       gtag('config', 'G-QT9YJYY8Y1');
     </script>
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -76,7 +77,7 @@
         .header-watch-card {
             background: #0F172A; color: #38BDF8; padding: 10px 18px; border-radius: 14px;
             display: flex; align-items: center; gap: 10px; font-family: monospace; font-size: 16px; font-weight: 800;
-            border: 1px solid #0284C7; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #0284C7;
         }
 
         .header-actions { display: flex; gap: 10px; align-items: center; }
@@ -116,38 +117,36 @@
             background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px;
             margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
-        .item-list li.completed {
-            background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.7;
-        }
-        
+        .item-list li.completed { background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.7; }
+
         .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 6px; }
         .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
 
+        /* INTERACTIVE CALENDAR WITH NAV */
+        .cal-nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cal-nav-btn { background: var(--primary-light); color: var(--primary); border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
         .cal-head { font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 6px; }
-        .cal-day { padding: 12px; background: rgba(0,0,0,0.02); border-radius: 10px; font-size: 13px; font-weight: 600; }
+        .cal-day { padding: 12px; background: rgba(0,0,0,0.02); border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
         .cal-day.active { background: var(--primary); color: white; }
+        .cal-day.holiday { background: #FEE2E2; color: var(--danger); border: 1px solid #FCA5A5; }
+
+        /* LIVE LEADERBOARD STYLING */
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .leaderboard-table th, .leaderboard-table td { padding: 10px; border: 1px solid var(--border); text-align: left; font-size: 13px; }
+        .leaderboard-table th { background: #F8FAFC; color: var(--text-muted); }
 
         .community-card { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
         .community-header { background: var(--pw-gradient); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-box { height: 380px; overflow-y: auto; padding: 20px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 15px; }
+        .chat-box { height: 350px; overflow-y: auto; padding: 20px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 15px; }
         .chat-bubble { background: var(--card-bg); border: 1px solid var(--border); padding: 14px; border-radius: 14px; max-width: 80%; }
-        .chat-bubble .author { font-weight: 700; font-size: 13px; color: #E64A19; margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999;
             justify-content: center; align-items: center;
         }
-        .modal-card { background: var(--card-bg); border-radius: 20px; padding: 26px; width: 460px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
-
-        .call-screen-card {
-            background: #0F172A; color: white; border-radius: 28px; padding: 40px 20px; text-align: center;
-            width: 340px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .call-buttons-wrap { display: flex; justify-content: space-around; margin-top: 35px; }
-        .btn-accept-call { width: 65px; height: 65px; border-radius: 50%; background: #10B981; color: white; border: none; font-size: 26px; cursor: pointer; }
-        .btn-decline-call { width: 65px; height: 65px; border-radius: 50%; background: #EF4444; color: white; border: none; font-size: 26px; cursor: pointer; }
+        .modal-card { background: var(--card-bg); border-radius: 20px; padding: 26px; width: 480px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
 
         #toast-alert {
             display: none; position: fixed; bottom: 25px; right: 25px; background: #10B981; color: white;
@@ -158,7 +157,6 @@
 <body>
 
     <div id="toast-alert">🎉 Alert</div>
-    <div id="recaptcha-container"></div>
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
@@ -166,7 +164,7 @@
         <ul class="nav-list">
             <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Dashboard"><i class="fa-solid fa-house"></i></li>
             <li class="nav-item" onclick="switchTab('timetable', this)" title="Timetable"><i class="fa-solid fa-calendar-day"></i></li>
-            <li class="nav-item" onclick="switchTab('tasks', this)" title="Tasks"><i class="fa-solid fa-check-to-slot"></i></li>
+            <li class="nav-item" onclick="switchTab('tasks', this)" title="Tasks & Goal XP"><i class="fa-solid fa-trophy"></i></li>
             <li class="nav-item" onclick="switchTab('community', this)" title="Global Doubt Community"><i class="fa-solid fa-users"></i></li>
             <li class="nav-item" onclick="toggleDarkMode()" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></li>
         </ul>
@@ -176,7 +174,7 @@
     <!-- MAIN WRAPPER -->
     <div class="main-wrapper">
         
-        <!-- HEADER WITH LIVE WATCH -->
+        <!-- HEADER -->
         <div class="top-header">
             <div class="header-brand-logo">
                 <i class="fa-solid fa-graduation-cap"></i>
@@ -193,7 +191,7 @@
             </div>
 
             <div class="header-actions">
-                <button class="btn-call" onclick="openModal('login-modal')"><i class="fa-solid fa-mobile-screen-button"></i> Mobile OTP Login</button>
+                <button class="btn-call" onclick="openModal('login-modal')"><i class="fa-solid fa-envelope"></i> Firebase Gmail Login</button>
                 <button class="btn-vip" onclick="openModal('vip-modal')"><i class="fa-solid fa-crown"></i> VIP Pricing</button>
                 <button class="btn-admin" id="owner-admin-btn" onclick="openModal('admin-modal')"><i class="fa-solid fa-shield-halved"></i> Owner Control</button>
             </div>
@@ -212,10 +210,10 @@
             <div class="board-banner">
                 <div class="board-info">
                     <h2>🚨 UP Board Exam Real-Time Countdown 🚨</h2>
-                    <p>Live Dynamic Target Clock</p>
+                    <p>Live Dynamic Decrement Clock</p>
                 </div>
                 <div class="countdown-grid">
-                    <div class="time-box"><span id="cd-days">187</span><label>Days</label></div>
+                    <div class="time-box"><span id="cd-days">00</span><label>Days</label></div>
                     <div class="time-box"><span id="cd-hours">00</span><label>Hours</label></div>
                     <div class="time-box"><span id="cd-mins">00</span><label>Mins</label></div>
                     <div class="time-box"><span id="cd-secs">00</span><label>Secs</label></div>
@@ -224,21 +222,36 @@
 
             <div class="dashboard-grid">
                 <div>
-                    <div class="card">
-                        <div class="card-header">📅 Saved Classes Schedule (Start & End Time)</div>
-                        <ul class="item-list" id="main-cls-list"></ul>
+                    <!-- LIVE WEBCAM GOAL VERIFICATION MODULE -->
+                    <div class="card" style="border-color: #0284C7; background: #F0F9FF;">
+                        <div class="card-header" style="color: #0369A1;">📷 Live Student Goal Camera Verification</div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Webcam active for live studying verification.</p>
+                        <video id="student-webcam" autoplay playsinline style="width: 100%; height: 180px; background: black; border-radius: 12px; margin-bottom: 10px;"></video>
+                        <button class="btn-call" style="width: 100%; justify-content: center;" onclick="startWebcamStream()">Start Camera Verification</button>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">📝 Pending Tasks & Reminders</div>
-                        <ul class="item-list" id="dash-tasks"></ul>
+                        <div class="card-header">📅 Saved Classes Schedule</div>
+                        <ul class="item-list" id="main-cls-list"></ul>
                     </div>
                 </div>
 
                 <div>
+                    <!-- INTERACTIVE CALENDAR WITH MONTH NAV & HOLIDAYS -->
                     <div class="card">
-                        <div class="card-header"><span id="cal-month-title">Calendar</span></div>
+                        <div class="cal-nav-bar">
+                            <button class="cal-nav-btn" onclick="changeMonth(-1)">&lt; Prev</button>
+                            <span id="cal-month-title" style="font-weight: bold;">Month Year</span>
+                            <button class="cal-nav-btn" onclick="changeMonth(1)">Next &gt;</button>
+                        </div>
                         <div class="cal-grid" id="cal-grid"></div>
+                        <p style="font-size: 11px; color: var(--danger); margin-top: 10px; text-align: center;">* Red Boxes = UP Government Official Holidays</p>
+                    </div>
+
+                    <!-- XP & LEVEL CARD -->
+                    <div class="card" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-color: #F59E0B;">
+                        <h3 style="color: #92400E; margin-bottom: 4px;">🏆 Level <span id="user-level-disp">1</span> Scholar</h3>
+                        <p style="font-size: 13px; color: #B45309; font-weight: bold;">Total XP: <span id="user-xp-disp">0</span> XP (+25 XP per Goal Completed)</p>
                     </div>
                 </div>
             </div>
@@ -248,17 +261,15 @@
         <div id="tab-timetable" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
-                    <div class="card-header">Add Class Schedule Range</div>
+                    <div class="card-header">Add Class Schedule</div>
                     <form id="cls-form">
                         <div class="input-group">
-                            <input type="text" id="cls-subject" placeholder="Subject Name (e.g. Maths PW)" required>
+                            <input type="text" id="cls-subject" placeholder="Subject Name (e.g. Physics PW)" required>
                             <input type="text" id="cls-room" placeholder="Topic / Room No." required>
-                            <label style="font-size: 12px; font-weight: bold; margin-top: 5px;">Shuru Hone Ka Time (Start Time):</label>
                             <input type="time" id="cls-start-time" required>
-                            <label style="font-size: 12px; font-weight: bold; margin-top: 5px;">Khatam Hone Ka Time (End Time):</label>
                             <input type="time" id="cls-end-time" required>
                         </div>
-                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Class Range</button>
+                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Schedule</button>
                     </form>
                 </div>
                 <div class="card">
@@ -268,22 +279,37 @@
             </div>
         </div>
 
-        <!-- TASKS TAB -->
+        <!-- TASKS & LEADERBOARD TAB -->
         <div id="tab-tasks" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
-                    <div class="card-header">Add Homework Task</div>
+                    <div class="card-header">Daily Study Goals (+25 XP)</div>
                     <form id="task-form">
                         <div class="input-group">
-                            <input type="text" id="task-desc" placeholder="Assignment Title" required>
+                            <input type="text" id="task-desc" placeholder="Goal Description" required>
                             <input type="date" id="task-due" required>
                         </div>
-                        <button class="btn-call" style="width: 100%; justify-content: center;">Save Task</button>
+                        <button class="btn-call" style="width: 100%; justify-content: center;">Add Goal</button>
                     </form>
+                    <ul class="item-list" id="task-list" style="margin-top: 15px;"></ul>
                 </div>
+
                 <div class="card">
-                    <div class="card-header">Tasks List</div>
-                    <ul class="item-list" id="task-list"></ul>
+                    <div class="card-header">🥇 Weekly XP Leaderboard</div>
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Student</th>
+                                <th>XP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <tr><td>🥇 #1</td><td>Aman Verma</td><td>350 XP</td></tr>
+                            <tr><td>🥈 #2</td><td>Priya Sharma</td><td>275 XP</td></tr>
+                            <tr style="font-weight: bold; background: #E0F2FE;"><td>🥉 #3</td><td id="lb-current-name">You</td><td id="lb-current-xp">0 XP</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -294,18 +320,17 @@
                 <div class="community-header">
                     <div>
                         <h2>🔥 Global PW Student Doubt Forum</h2>
-                        <p style="font-size: 12px; opacity: 0.9;">Live Sync Across All Online Users</p>
+                        <p style="font-size: 12px; opacity: 0.9;">Live Real-Time Sync Community</p>
                     </div>
-                    <span style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 10px; font-weight: bold; font-size: 13px;">🟢 Global Live Sync Active</span>
                 </div>
 
                 <div class="chat-box" id="community-chat-box"></div>
 
                 <div style="padding: 15px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
-                    <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name for Public Profile">
+                    <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name">
                     <div style="display: flex; gap: 10px;">
                         <input type="text" id="comm-msg-input" placeholder="Type your doubt here..." style="flex:1;">
-                        <button class="btn-call" style="background: var(--pw-gradient);" onclick="postPublicDoubt()">Post Doubt Live</button>
+                        <button class="btn-call" style="background: var(--pw-gradient);" onclick="postPublicDoubt()">Post Doubt</button>
                     </div>
                 </div>
             </div>
@@ -313,17 +338,29 @@
 
     </div>
 
-    <!-- CALL MODAL -->
-    <div class="modal-overlay" id="incoming-call-modal">
-        <div class="call-screen-card">
-            <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px;"><i class="fa-solid fa-phone"></i></div>
-            <h3 style="font-size: 22px;" id="call-title">Study Coach Alert</h3>
-            <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;" id="call-subtitle">Aapka Study Time Ho Gaya!</p>
-
-            <div class="call-buttons-wrap">
-                <button class="btn-decline-call" onclick="declineCall()"><i class="fa-solid fa-phone-slash"></i></button>
-                <button class="btn-accept-call" onclick="answerCall()"><i class="fa-solid fa-phone"></i></button>
+    <!-- FIREBASE GMAIL LOGIN MODAL -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-card">
+            <h3>🔑 Firebase Gmail Login</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Enter your Gmail address to login.</p>
+            <div class="input-group">
+                <input type="email" id="user-gmail-input" placeholder="Enter Gmail Address">
             </div>
+            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="handleFirebaseGmailLogin()">Login Session</button>
+        </div>
+    </div>
+
+    <!-- OWNER ADMIN CONTROL MODAL WITH LIVE CAMERA STREAM MONITOR -->
+    <div class="modal-overlay" id="admin-modal">
+        <div class="modal-card">
+            <h3 style="color: #0284C7;">👑 Owner Admin Access Panel</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Live Monitor Student Goal Camera</p>
+
+            <div style="background: black; height: 180px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white;">
+                <video id="admin-live-feed" autoplay playsinline style="width: 100%; height: 100%; border-radius: 12px;"></video>
+            </div>
+
+            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="closeModal('admin-modal')">Close Control</button>
         </div>
     </div>
 
@@ -354,47 +391,140 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        let callAudio = new Audio('https://actions.google.com/sounds/v1/ringtones/retro_phone_ring.ogg');
-        let currentVoiceMessage = "";
-        
-        function triggerIncomingCallAlert(title, subtitle, voiceText) {
-            document.getElementById('call-title').innerText = title;
-            document.getElementById('call-subtitle').innerText = subtitle;
-            currentVoiceMessage = voiceText;
-            openModal('incoming-call-modal');
-            callAudio.loop = true;
-            callAudio.play().catch(e => console.log(e));
+        /* REALTIME COUNTDOWN LOGIC */
+        function updateCountdown() {
+            const targetDate = new Date("February 15, 2027 09:00:00").getTime();
+            const diff = targetDate - new Date().getTime();
+            if (diff <= 0) return;
+            document.getElementById('cd-days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById('cd-hours').innerText = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            document.getElementById('cd-mins').innerText = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+            document.getElementById('cd-secs').innerText = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
         }
+        setInterval(updateCountdown, 1000); updateCountdown();
 
-        function answerCall() {
-            callAudio.pause();
-            closeModal('incoming-call-modal');
-            if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance(currentVoiceMessage || "Namaste! Aapka Study Session Shuru Ho Gaya Hai.");
-                msg.lang = 'hi-IN';
-                window.speechSynthesis.speak(msg);
+        /* GMAIL LOGIN */
+        let currentUserEmail = localStorage.getItem('study_user_email') || 'Guest Student';
+        function updateLoginUI() {
+            document.getElementById('user-login-status').innerText = `Logged in: ${currentUserEmail}`;
+            document.getElementById('sidebar-user-avatar').innerText = currentUserEmail.charAt(0).toUpperCase();
+
+            const isAdmin = ADMIN_EMAILS.some(a => a.toLowerCase() === currentUserEmail.trim().toLowerCase());
+            document.getElementById('owner-admin-btn').style.display = isAdmin ? 'flex' : 'none';
+        }
+        updateLoginUI();
+
+        function handleFirebaseGmailLogin() {
+            const gmail = document.getElementById('user-gmail-input').value;
+            if(gmail) {
+                currentUserEmail = gmail;
+                localStorage.setItem('study_user_email', gmail);
+                updateLoginUI();
+                closeModal('login-modal');
+                showToast("Logged in via Firebase Gmail!");
             }
         }
 
-        function declineCall() { callAudio.pause(); closeModal('incoming-call-modal'); }
+        /* WEBCAM CAMERA ACCESS CONTROL */
+        function startWebcamStream() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                    document.getElementById('student-webcam').srcObject = stream;
+                    document.getElementById('admin-live-feed').srcObject = stream;
+                    showToast("📷 Live Student Goal Verification Camera Active!");
+                }).catch(err => {
+                    alert("Camera Permission Denied or Not Available!");
+                });
+            }
+        }
 
-        /* REALTIME CHECKER FOR CLASS START & END TIME CALL ALERTS */
-        setInterval(() => {
-            const now = new Date();
-            const currentTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            
-            classes.forEach(c => {
-                if(c.startTime === currentTimeStr && now.getSeconds() === 0) {
-                    triggerIncomingCallAlert("Class Start Alert!", `${c.name} Shuru Ho Gaya Hai!`, `Namaste! Aapka ${c.name} ka time shuru ho gaya hai. Padhne aaiye.`);
-                }
-                if(c.endTime === currentTimeStr && now.getSeconds() === 0) {
-                    triggerIncomingCallAlert("Class Finish Alert!", `${c.name} Ka Time Khatam Ho Gaya!`, `Aapka ${c.name} ka time khatam ho gaya hai. Bahut achha padha!`);
-                }
+        /* INTERACTIVE CALENDAR WITH MONTH NAV & HOLIDAYS */
+        let currentDate = new Date();
+        const UP_HOLIDAYS = [15, 26, 2, 24]; // Standard UP Govt Holidays
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('cal-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            document.getElementById('cal-month-title').innerText = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div class="cal-head">${d}</div>`);
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = (d === new Date().getDate() && currentDate.getMonth() === new Date().getMonth());
+                const isHoliday = UP_HOLIDAYS.includes(d);
+                grid.innerHTML += `<div class="cal-day ${isToday ? 'active' : ''} ${isHoliday ? 'holiday' : ''}" onclick="alert('Selected Date: ${d} ${document.getElementById('cal-month-title').innerText}')">${d}</div>`;
+            }
+        }
+        renderCalendar();
+
+        /* XP & LEVEL LOGIC FOR GOAL COMPLETION */
+        let userXP = parseInt(localStorage.getItem('user_xp') || '0');
+        function updateXPDisplay() {
+            document.getElementById('user-xp-disp').innerText = userXP;
+            document.getElementById('user-level-disp').innerText = Math.floor(userXP / 100) + 1;
+            document.getElementById('lb-current-xp').innerText = `${userXP} XP`;
+            localStorage.setItem('user_xp', userXP);
+        }
+        updateXPDisplay();
+
+        /* TASKS WITH XP INTEGRATION */
+        document.getElementById('task-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value, done: false });
+            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            e.target.reset();
+            renderTasks();
+            showToast("Goal Saved!");
+        });
+
+        function renderTasks() {
+            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            const list = document.getElementById('task-list');
+            if(list) list.innerHTML = '';
+
+            tasks.forEach(t => {
+                const html = `
+                    <li class="${t.done ? 'completed' : ''}">
+                        <div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div>
+                        <div>
+                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Done' : 'Complete Goal (+25 XP)'}</button>
+                            <button class="btn-del" onclick="delTask(${t.id})">Delete</button>
+                        </div>
+                    </li>`;
+                if(list) list.innerHTML += html;
             });
-        }, 1000);
+        }
 
-        /* CLASSES WITH START & END TIME + DONE FEATURE */
+        function toggleTaskDone(id) {
+            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            tasks = tasks.map(t => {
+                if(t.id === id) {
+                    if(!t.done) { userXP += 25; showToast("🎉 Goal Completed! +25 XP Earned!"); }
+                    t.done = !t.done;
+                }
+                return t;
+            });
+            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            updateXPDisplay();
+            renderTasks();
+        }
+
+        function delTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]').filter(t => t.id !== id);
+            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+        renderTasks();
+
+        /* CLASSES */
         document.getElementById('cls-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
@@ -403,13 +533,12 @@
                 name: document.getElementById('cls-subject').value,
                 room: document.getElementById('cls-room').value,
                 startTime: document.getElementById('cls-start-time').value,
-                endTime: document.getElementById('cls-end-time').value,
-                done: false
+                endTime: document.getElementById('cls-end-time').value
             });
             localStorage.setItem('user_classes', JSON.stringify(classes));
             e.target.reset();
             renderClasses();
-            showToast("Class Schedule Range Saved!");
+            showToast("Schedule Saved!");
         });
 
         function renderClasses() {
@@ -420,33 +549,11 @@
             if(mainList) mainList.innerHTML = '';
 
             classes.forEach(c => {
-                const html = `
-                    <li class="${c.done ? 'completed' : ''}">
-                        <div>
-                            <strong>${c.name}</strong> (${c.startTime} se ${c.endTime})<br>
-                            <small style="color:var(--text-muted);">${c.room}</small>
-                        </div>
-                        <div>
-                            <button class="btn-done" onclick="toggleClsDone(${c.id})">${c.done ? '✓ Done' : 'Mark Done'}</button>
-                            <button class="btn-del" onclick="delCls(${c.id})">Delete</button>
-                        </div>
-                    </li>`;
+                const html = `<li><div><strong>${c.name}</strong> (${c.startTime} - ${c.endTime})<br><small style="color:var(--text-muted);">${c.room}</small></div><button class="btn-del" onclick="delCls(${c.id})">Delete</button></li>`;
                 if(list) list.innerHTML += html;
                 if(mainList) mainList.innerHTML += html;
             });
         }
-
-        function toggleClsDone(id) {
-            let classes = JSON.parse(localStorage.getItem('user_classes') || '[]');
-            classes = classes.map(c => {
-                if(c.id === id) c.done = !c.done;
-                return c;
-            });
-            localStorage.setItem('user_classes', JSON.stringify(classes));
-            renderClasses();
-            showToast("Status Updated!");
-        }
-
         function delCls(id) {
             let classes = JSON.parse(localStorage.getItem('user_classes') || '[]').filter(c => c.id !== id);
             localStorage.setItem('user_classes', JSON.stringify(classes));
@@ -454,72 +561,34 @@
         }
         renderClasses();
 
-        /* TASKS WITH DONE FEATURE */
-        document.getElementById('task-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
-            tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value, done: false });
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
-            e.target.reset();
-            renderTasks();
-            showToast("Task Saved!");
-        });
-
-        function renderTasks() {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
-            const list = document.getElementById('task-list');
-            const dashList = document.getElementById('dash-tasks');
-            if(list) list.innerHTML = '';
-            if(dashList) dashList.innerHTML = '';
-
-            tasks.forEach(t => {
-                const html = `
-                    <li class="${t.done ? 'completed' : ''}">
-                        <div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div>
-                        <div>
-                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Completed' : 'Mark Done'}</button>
-                            <button class="btn-del" onclick="delTask(${t.id})">Delete</button>
-                        </div>
-                    </li>`;
-                if(list) list.innerHTML += html;
-                if(dashList) dashList.innerHTML += html;
+        /* COMMUNITY REALTIME FORUM */
+        let globalPosts = JSON.parse(localStorage.getItem('global_community_posts') || '[]');
+        function renderCommunityPosts() {
+            const box = document.getElementById('community-chat-box');
+            if(!box) return;
+            box.innerHTML = '';
+            globalPosts.forEach(p => {
+                box.innerHTML += `
+                    <div class="chat-bubble">
+                        <div style="font-weight:bold; font-size:13px; color:#E64A19;">${p.name}</div>
+                        <p style="font-size:14px; margin-top:4px;">${p.text}</p>
+                    </div>`;
             });
+            box.scrollTop = box.scrollHeight;
         }
 
-        function toggleTaskDone(id) {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
-            tasks = tasks.map(t => {
-                if(t.id === id) t.done = !t.done;
-                return t;
-            });
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
-            renderTasks();
-            showToast("Task Complete Status Updated!");
-        }
-
-        function delTask(id) {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]').filter(t => t.id !== id);
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-        renderTasks();
-
-        function renderCalendar() {
-            const grid = document.getElementById('cal-grid');
-            if(!grid) return;
-            grid.innerHTML = '';
-            const now = new Date();
-            document.getElementById('cal-month-title').innerText = now.toLocaleString('default', { month: 'long', year: 'numeric' });
-
-            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div class="cal-head">${d}</div>`);
-            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const isToday = d === now.getDate();
-                grid.innerHTML += `<div class="cal-day ${isToday ? 'active' : ''}">${d}</div>`;
+        function postPublicDoubt() {
+            const txt = document.getElementById('comm-msg-input').value;
+            const name = document.getElementById('comm-user-realname').value || "Student";
+            if(txt) {
+                globalPosts.push({ name: name, text: txt });
+                localStorage.setItem('global_community_posts', JSON.stringify(globalPosts));
+                document.getElementById('comm-msg-input').value = '';
+                renderCommunityPosts();
+                showToast("Doubt Posted!");
             }
         }
-        renderCalendar();
+        renderCommunityPosts();
     </script>
 </body>
 </html>
