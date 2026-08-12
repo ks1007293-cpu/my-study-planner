@@ -3,36 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner - Pro Student Platform & UP Board Tracker</title>
+    <title>My Study Planner - Ultimate Student Super App</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "My Study Planner",
-      "alternateName": ["MyStudyPlanner", "UP Board Study Planner"],
-      "url": "https://ks1007293-cpu.github.io/my-study-planner/"
-    }
-    </script>
-
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT9YJYY8Y1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-QT9YJYY8Y1');
-    </script>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- HTML2Canvas Library for Downloading Chart as Image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         :root {
@@ -48,7 +28,6 @@
             --text-muted: #64748B;
             --border: #E2E8F0;
             --danger: #EF4444;
-            --warning: #F59E0B;
             --success: #10B981;
         }
 
@@ -77,7 +56,7 @@
         }
         .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
-        .main-wrapper { margin-left: 80px; flex: 1; padding: 25px 30px; max-width: 1450px; }
+        .main-wrapper { margin-left: 80px; flex: 1; padding: 25px 30px; max-width: 1400px; }
 
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .header-brand-logo { display: flex; align-items: center; gap: 12px; }
@@ -91,10 +70,16 @@
         }
 
         .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .btn-action { padding: 9px 14px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; border: none; }
+        .btn-action { padding: 9px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; border: none; }
         .btn-call { background: var(--primary-gradient); color: white; }
         .btn-vip { background: var(--vip-gradient); color: white; }
-        .btn-admin { background: #0F172A; color: #38BDF8; border: 1px solid #0284C7; display: none; }
+        .btn-download { background: #10B981; color: white; }
+
+        .quote-card {
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+            border: 1px solid #93C5FD; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px;
+            color: #1E40AF; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+        }
 
         .big-goal-card {
             background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); color: white;
@@ -123,6 +108,11 @@
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         input, select, textarea { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
 
+        #printable-chart-area { background: #FFFFFF; padding: 20px; border-radius: 16px; border: 2px solid var(--primary); }
+        .chart-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .chart-table th, .chart-table td { padding: 10px; border: 1px solid var(--border); text-align: left; font-size: 12px; }
+        .chart-table th { background: var(--primary-light); color: var(--primary); font-weight: 800; }
+
         .item-list { list-style: none; }
         .item-list li {
             background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px;
@@ -132,28 +122,6 @@
 
         .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-right: 6px; font-size: 12px; }
         .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 5px 10px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; }
-
-        /* SYLLABUS TRACKER STYLING */
-        .syllabus-subject { margin-bottom: 14px; background: rgba(0,0,0,0.01); padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
-        .syll-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; margin-bottom: 6px; }
-        .syll-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; }
-        .syll-fill { height: 100%; background: var(--primary); transition: width 0.3s ease; }
-        .syll-checklist { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
-
-        /* MULTI-USER VIDEO CALL GRID */
-        .video-call-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 12px; }
-        .video-box { background: #0F172A; border-radius: 12px; height: 140px; position: relative; overflow: hidden; border: 2px solid #0284C7; }
-        .video-box video { width: 100%; height: 100%; object-fit: cover; }
-        .video-label { position: absolute; bottom: 6px; left: 8px; background: rgba(0,0,0,0.6); color: white; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
-
-        /* MULTI SCREEN ADMIN MONITOR GRID */
-        .admin-screen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-        .admin-screen-box { background: black; border-radius: 10px; height: 130px; position: relative; border: 1px solid #0284C7; }
-        .admin-screen-box video { width: 100%; height: 100%; object-fit: cover; }
-
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        .leaderboard-table th, .leaderboard-table td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; font-size: 12px; }
-        .leaderboard-table th { background: rgba(0,0,0,0.02); color: var(--text-muted); }
 
         .community-card { background: var(--card-bg); border-radius: 18px; border: 1px solid var(--border); overflow: hidden; }
         .community-header { background: var(--pw-gradient); color: white; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
@@ -176,20 +144,19 @@
 <body>
 
     <div id="toast-alert">🎉 Notification</div>
-    <video id="student-screen-hidden" autoplay playsinline style="display: none;"></video>
 
     <!-- LEFT SIDEBAR -->
     <div class="sidebar">
         <a href="#" class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></a>
         <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Dashboard"><i class="fa-solid fa-house"></i></li>
-            <li class="nav-item" onclick="switchTab('syllabus', this)" title="Live Syllabus Tracker"><i class="fa-solid fa-book-open"></i></li>
-            <li class="nav-item" onclick="switchTab('videocall', this)" title="Group Video/Voice Study Room"><i class="fa-solid fa-video"></i></li>
-            <li class="nav-item" onclick="switchTab('community', this)" title="Doubt Community & Groups"><i class="fa-solid fa-users"></i></li>
+            <li class="nav-item active" onclick="switchTab('chart', this)" title="Daily Study Chart"><i class="fa-solid fa-calendar-week"></i></li>
+            <li class="nav-item" onclick="switchTab('dashboard', this)" title="Dashboard & Clock"><i class="fa-solid fa-house"></i></li>
+            <li class="nav-item" onclick="switchTab('ai-assistant', this)" title="AI Study Assistant"><i class="fa-solid fa-robot"></i></li>
+            <li class="nav-item" onclick="switchTab('formulas', this)" title="Formula Bank & PYQ"><i class="fa-solid fa-square-root-variable"></i></li>
+            <li class="nav-item" onclick="switchTab('community', this)" title="PW Doubt Community"><i class="fa-solid fa-users"></i></li>
             <li class="nav-item" onclick="switchTab('tasks', this)" title="Goals & Leaderboard XP"><i class="fa-solid fa-trophy"></i></li>
             <li class="nav-item" onclick="toggleDarkMode()" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></li>
         </ul>
-        <div class="user-avatar" id="sidebar-user-avatar" onclick="openModal('login-modal')">U</div>
     </div>
 
     <!-- MAIN WRAPPER -->
@@ -201,7 +168,7 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 <div class="header-title">
                     <h1>My Study Planner</h1>
-                    <p id="user-login-status">Logged in: Guest Student</p>
+                    <p>Personal EdTech Super App & Routine Manager</p>
                 </div>
             </div>
 
@@ -211,27 +178,135 @@
             </div>
 
             <div class="header-actions">
-                <button class="btn-action btn-call" onclick="startScreenShareTracker()"><i class="fa-solid fa-desktop"></i> Screen Share</button>
-                <button class="btn-action btn-call" onclick="openModal('login-modal')"><i class="fa-solid fa-envelope"></i> Login</button>
+                <button class="btn-action btn-download" onclick="downloadChartAsImage()"><i class="fa-solid fa-download"></i> Download Chart</button>
+                <button class="btn-action btn-call" onclick="backupPlannerData()"><i class="fa-solid fa-floppy-disk"></i> Backup Data</button>
                 <button class="btn-action btn-vip" onclick="openModal('vip-modal')"><i class="fa-solid fa-crown"></i> VIP Pass</button>
-                <button class="btn-action btn-admin" id="owner-admin-btn" onclick="openModal('admin-modal')"><i class="fa-solid fa-shield-halved"></i> Admin Control</button>
             </div>
+        </div>
+
+        <!-- MOTIVATIONAL QUOTE -->
+        <div class="quote-card">
+            <span>💡 <strong>Daily Success Quote:</strong> "Success isn't always about greatness. It's about consistency. Consistent hard work leads to success."</span>
+            <span style="font-size:11px; opacity:0.8;">🔥 Streak: 7 Days</span>
         </div>
 
         <div class="big-goal-card">
             <div>
-                <p>🎯 ACTIVE ACADEMIC TARGET</p>
+                <p>🎯 MY PERSONAL ACADEMIC TARGET</p>
                 <h2 id="main-goal-display">UP Board Class 10th — Target Score: 95%</h2>
             </div>
-            <button class="btn-action btn-call" style="background: rgba(255,255,255,0.1);" onclick="openModal('goal-modal')">Change Goal</button>
+            <button class="btn-action btn-call" style="background: rgba(255,255,255,0.1);" onclick="openModal('goal-modal')">Edit Goal</button>
         </div>
 
-        <!-- 1. DASHBOARD TAB -->
-        <div id="tab-dashboard" class="tab-panel active">
+        <!-- 1. DAILY STUDY CHART TAB -->
+        <div id="tab-chart" class="tab-panel active">
+            <div class="dashboard-grid">
+                <div>
+                    <div class="card">
+                        <div class="card-header">➕ Add Subject To Daily Routine</div>
+                        <form id="chart-form">
+                            <div class="input-group">
+                                <input type="text" id="chart-subject" placeholder="Subject Name (e.g. Physics / Maths)" required>
+                                <input type="text" id="chart-topic" placeholder="Topic / Chapter to Study" required>
+                                <div style="display:flex; gap:10px;">
+                                    <div style="flex:1;">
+                                        <label style="font-size:11px; font-weight:bold;">Start Time:</label>
+                                        <input type="time" id="chart-start-time" required>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size:11px; font-weight:bold;">End Time:</label>
+                                        <input type="time" id="chart-end-time" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-action btn-call" style="width:100%; justify-content:center;">Add to Daily Routine</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">📝 Quick Revision Scratchpad</div>
+                        <textarea placeholder="Write down important formulas, definitions or reminders here..." style="width:100%; height:120px;"></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <div id="printable-chart-area">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
+                            <div>
+                                <h2 style="color:var(--primary); font-weight:800; font-size:18px;">📘 MY DAILY STUDY ROUTINE</h2>
+                                <p style="font-size:12px; color:var(--text-muted);" id="chart-date-display">Date: Today</p>
+                            </div>
+                            <i class="fa-solid fa-graduation-cap" style="font-size:28px; color:var(--primary);"></i>
+                        </div>
+
+                        <table class="chart-table">
+                            <thead>
+                                <tr>
+                                    <th>Timing</th>
+                                    <th>Subject</th>
+                                    <th>Topic / Chapter</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="daily-chart-tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="card" style="background: #F0FDF4; border-color: #86EFAC; margin-top:20px;">
+                        <h4 style="color: #166534; margin-bottom: 8px;">🎧 Focus Ambience Audio</h4>
+                        <audio controls style="width:100%; height:32px;">
+                            <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. AI STUDY ASSISTANT TAB -->
+        <div id="tab-ai-assistant" class="tab-panel">
+            <div class="card">
+                <div class="card-header">🤖 AI Smart Study Assistant</div>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Ask for formulas, definitions, or study strategies instant response.</p>
+                <div style="height: 250px; overflow-y: auto; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border);" id="ai-chat-box">
+                    <div style="background: var(--card-bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border); font-size: 13px; margin-bottom: 10px;">
+                        <strong>🤖 AI Assistant:</strong> Namaste! Ask me any physics formula, definitions or board exam tips.
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="ai-user-query" placeholder="Ask AI e.g. What is Ohm's Law formula?" style="flex: 1;">
+                    <button class="btn-action btn-call" onclick="askAiAssistant()">Ask AI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. FORMULA BANK & PYQ TAB -->
+        <div id="tab-formulas" class="tab-panel">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">📐 Quick Formula Bank</div>
+                    <ul class="item-list">
+                        <li><strong>Ohm's Law:</strong> V = I × R</li>
+                        <li><strong>Kinematics Equation:</strong> v = u + a × t</li>
+                        <li><strong>Power Formula:</strong> P = V × I = I²R</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-header">📑 Previous Year Papers (PYQ) Tracker</div>
+                    <ul class="item-list">
+                        <li><label><input type="checkbox"> UP Board 2025 Science Paper</label></li>
+                        <li><label><input type="checkbox"> UP Board 2024 Maths Paper</label></li>
+                        <li><label><input type="checkbox"> UP Board 2023 Physics Paper</label></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. DASHBOARD & COUNTDOWN TAB -->
+        <div id="tab-dashboard" class="tab-panel">
             <div class="board-banner">
                 <div class="board-info">
-                    <h2>🚨 UP Board Exam Live Countdown 🚨</h2>
-                    <p>Dynamic Decrement Engine</p>
+                    <h2>🚨 UP Board Exam Real-Time Countdown 🚨</h2>
+                    <p>Live Dynamic Target Clock</p>
                 </div>
                 <div class="countdown-grid">
                     <div class="time-box"><span id="cd-days">00</span><label>Days</label></div>
@@ -241,107 +316,24 @@
                 </div>
             </div>
 
-            <div class="dashboard-grid">
-                <div>
-                    <div class="card">
-                        <div class="card-header">📅 Saved Class Schedule</div>
-                        <ul class="item-list" id="main-cls-list"></ul>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">📝 Active Study Goals</div>
-                        <ul class="item-list" id="dash-tasks"></ul>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(-1)">&lt;</button>
-                            <span id="cal-month-title">Month Year</span>
-                            <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(1)">&gt;</button>
-                        </div>
-                        <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;" id="cal-grid"></div>
-                    </div>
-
-                    <div class="card" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-color: #F59E0B;">
-                        <h3 style="color: #92400E; margin-bottom: 2px;">🏆 Level <span id="user-level-disp">1</span> Scholar</h3>
-                        <p style="font-size: 12px; color: #B45309; font-weight: bold;">Total Score: <span id="user-xp-disp">0</span> XP (+25 XP / Completion)</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. LIVE SYLLABUS TRACKER TAB -->
-        <div id="tab-syllabus" class="tab-panel">
             <div class="card">
-                <div class="card-header">📘 Live Board Syllabus Completion Tracker</div>
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Check topics as you finish studying. Your progress bar updates automatically and earns +25 XP!</p>
-
-                <!-- PHYSICS -->
-                <div class="syllabus-subject">
-                    <div class="syll-header"><span>Physics</span><span id="syll-phy-perc">0%</span></div>
-                    <div class="syll-bar"><div class="syll-fill" id="syll-phy-bar" style="width: 0%;"></div></div>
-                    <div class="syll-checklist">
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('phy', this)"> Chapter 1: Light Reflection & Refraction</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('phy', this)"> Chapter 2: Human Eye & Colorful World</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('phy', this)"> Chapter 3: Electricity & Magnetic Effects</label>
-                    </div>
+                <div class="card-header">
+                    <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(-1)">&lt; Prev</button>
+                    <span id="cal-month-title">Month Year</span>
+                    <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(1)">&gt;</button>
                 </div>
-
-                <!-- CHEMISTRY -->
-                <div class="syllabus-subject">
-                    <div class="syll-header"><span>Chemistry</span><span id="syll-chem-perc">0%</span></div>
-                    <div class="syll-bar"><div class="syll-fill" id="syll-chem-bar" style="width: 0%; background: #8B5CF6;"></div></div>
-                    <div class="syll-checklist">
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('chem', this)"> Chapter 1: Chemical Reactions & Equations</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('chem', this)"> Chapter 2: Acids, Bases & Salts</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('chem', this)"> Chapter 3: Carbon & Its Compounds</label>
-                    </div>
-                </div>
-
-                <!-- MATHS -->
-                <div class="syllabus-subject">
-                    <div class="syll-header"><span>Mathematics</span><span id="syll-math-perc">0%</span></div>
-                    <div class="syll-bar"><div class="syll-fill" id="syll-math-bar" style="width: 0%; background: #10B981;"></div></div>
-                    <div class="syll-checklist">
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('math', this)"> Chapter 1: Real Numbers & Polynomials</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('math', this)"> Chapter 2: Quadratic Equations & AP</label>
-                        <label><input type="checkbox" onchange="updateSyllablesProgress('math', this)"> Chapter 3: Trigonometry & Geometry</label>
-                    </div>
-                </div>
+                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;" id="cal-grid"></div>
             </div>
         </div>
 
-        <!-- 3. GROUP VIDEO & VOICE CALL TAB -->
-        <div id="tab-videocall" class="tab-panel">
-            <div class="card">
-                <div class="card-header">📹 Multi-Student Live Video/Voice Study Room</div>
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Connect with unlimited classmates for group study sessions.</p>
-                
-                <div style="display:flex; gap:10px; margin-bottom:15px;">
-                    <button class="btn-action btn-call" onclick="startGroupVideoCall()"><i class="fa-solid fa-video"></i> Start Local Camera Stream</button>
-                    <button class="btn-action btn-vip" onclick="toggleMuteAudio()"><i class="fa-solid fa-microphone"></i> Toggle Mute Mic</button>
-                </div>
-
-                <div class="video-call-grid" id="video-participants-grid">
-                    <div class="video-box">
-                        <video id="self-video-stream" autoplay playsinline muted></video>
-                        <span class="video-label">You (Host Student)</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. COMMUNITY & GROUPS TAB -->
+        <!-- 5. COMMUNITY TAB -->
         <div id="tab-community" class="tab-panel">
             <div class="community-card">
                 <div class="community-header">
                     <div>
-                        <h2>🔥 PW Student Community & Doubt Groups</h2>
-                        <p style="font-size: 11px; opacity: 0.9;">Join or Create Study Groups</p>
+                        <h2>🔥 PW Student Community Forum</h2>
+                        <p style="font-size: 11px; opacity: 0.9;">Ask Doubts & Connect with Classmates</p>
                     </div>
-                    <button class="btn-action btn-call" style="background:white; color:var(--text-main);" onclick="createNewStudyGroup()">+ Create Group</button>
                 </div>
 
                 <div class="chat-box" id="community-chat-box"></div>
@@ -349,18 +341,18 @@
                 <div style="padding: 12px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
                     <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name">
                     <div style="display: flex; gap: 8px;">
-                        <input type="text" id="comm-msg-input" placeholder="Type your doubt or group question..." style="flex:1;">
+                        <input type="text" id="comm-msg-input" placeholder="Type your doubt here..." style="flex:1;">
                         <button class="btn-action btn-call" style="background: var(--pw-gradient);" onclick="postPublicDoubt()">Post Doubt</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 5. TASKS & LEADERBOARD TAB -->
+        <!-- 6. TASKS & LEADERBOARD TAB -->
         <div id="tab-tasks" class="tab-panel">
             <div class="dashboard-grid">
                 <div class="card">
-                    <div class="card-header">Add Goal (+25 XP)</div>
+                    <div class="card-header">Add Personal Task (+25 XP)</div>
                     <form id="task-form">
                         <div class="input-group">
                             <input type="text" id="task-desc" placeholder="Goal Description" required>
@@ -373,63 +365,39 @@
 
                 <div class="card">
                     <div class="card-header">🥇 Weekly XP Leaderboard</div>
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr><th>Rank</th><th>Student</th><th>XP</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>🥇 #1</td><td>Aman Verma</td><td>350 XP</td></tr>
-                            <tr><td>🥈 #2</td><td>Priya Sharma</td><td>275 XP</td></tr>
-                            <tr style="font-weight: bold; background: #E0F2FE;"><td>🥉 #3</td><td>You</td><td id="lb-current-xp">0 XP</td></tr>
-                        </tbody>
-                    </table>
+                    <ul class="item-list">
+                        <li>🥇 #1 Aman Verma - 350 XP</li>
+                        <li>🥈 #2 Priya Sharma - 275 XP</li>
+                        <li style="font-weight:bold; background:#E0F2FE;">🥉 #3 You - <span id="lb-current-xp">0 XP</span></li>
+                    </ul>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- OWNER ADMIN CONTROL MODAL WITH MULTI-SCREEN MONITOR -->
-    <div class="modal-overlay" id="admin-modal">
+    <!-- VIP PRICING MODAL -->
+    <div class="modal-overlay" id="vip-modal">
         <div class="modal-card">
-            <h3 style="color: #0284C7;">👑 Owner Control & Multi-Screen Monitor</h3>
-            
-            <div style="margin: 12px 0; text-align: left; background: #F8FAFC; padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
-                <label style="font-size: 11px; font-weight: bold;">Grant VIP Access to User Email:</label>
-                <div style="display: flex; gap: 6px; margin-top: 4px;">
-                    <input type="email" id="admin-vip-target-email" placeholder="User Email" style="flex:1;">
-                    <button class="btn-action btn-vip" onclick="grantVipAccessDirect()">Grant</button>
-                </div>
-            </div>
-
-            <p style="font-size: 12px; color: var(--text-muted); text-align:left;">🖥️ Multi-Student Screen Live Monitor Grid:</p>
-            <div class="admin-screen-grid">
-                <div class="admin-screen-box">
-                    <video id="admin-screen-live-feed1" autoplay playsinline></video>
-                </div>
-                <div class="admin-screen-box" style="display:flex; align-items:center; justify-content:center; color:#64748B; font-size:10px;">
-                    Student 2 Offline
-                </div>
-            </div>
-
-            <button class="btn-action btn-call" style="width: 100%; justify-content: center; margin-top: 14px;" onclick="closeModal('admin-modal')">Close Control</button>
+            <h3 style="color: #6D28D9;">👑 VIP Membership Plans</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin:10px 0;">Unlock unlimited features and priority AI response.</p>
+            <button class="btn-action btn-vip" style="width: 100%; justify-content: center;" onclick="closeModal('vip-modal')">Close Window</button>
         </div>
     </div>
 
-    <!-- GMAIL LOGIN MODAL -->
-    <div class="modal-overlay" id="login-modal">
+    <!-- TARGET GOAL EDIT MODAL -->
+    <div class="modal-overlay" id="goal-modal">
         <div class="modal-card">
-            <h3>🔑 Firebase Email Login</h3>
-            <div class="input-group" style="margin-top:12px;">
-                <input type="email" id="user-gmail-input" placeholder="Enter Gmail Address">
+            <h3>Edit Target Goal</h3>
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="text" id="modal-goal-exam" placeholder="Target Exam (e.g. UP Board Class 10)">
+                <input type="number" id="modal-goal-percent" placeholder="Target Score % (e.g. 95)">
             </div>
-            <button class="btn-action btn-call" style="width: 100%; justify-content: center;" onclick="handleFirebaseGmailLogin()">Login</button>
+            <button class="btn-action btn-call" style="width: 100%; justify-content: center;" onclick="saveGoalFromModal()">Save Goal</button>
         </div>
     </div>
 
     <script>
-        const ADMIN_EMAILS = ["ks1007293@gmail.com", "globalharmonypro9052@gmail.com"];
-
         function switchTab(tabId, element) {
             document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -451,10 +419,35 @@
         function updateClock() {
             const now = new Date();
             document.getElementById('live-digital-clock').innerText = now.toLocaleTimeString();
+            document.getElementById('chart-date-display').innerText = `Date: ${now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}`;
         }
         setInterval(updateClock, 1000); updateClock();
 
-        /* REALTIME COUNTDOWN */
+        /* AI ASSISTANT */
+        function askAiAssistant() {
+            const query = document.getElementById('ai-user-query').value;
+            if(!query) return;
+            const box = document.getElementById('ai-chat-box');
+            box.innerHTML += `<div style="background:#EFF6FF; padding:8px 12px; border-radius:10px; margin-bottom:8px; font-size:13px;"><strong>You:</strong> ${query}</div>`;
+            document.getElementById('ai-user-query').value = '';
+            
+            setTimeout(() => {
+                box.innerHTML += `<div style="background:var(--card-bg); padding:8px 12px; border-radius:10px; margin-bottom:8px; border:1px solid var(--border); font-size:13px;"><strong>🤖 AI Assistant:</strong> Great question! Focus on core formulas and daily revision to master this concept.</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 600);
+        }
+
+        /* DATA BACKUP */
+        function backupPlannerData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `my_study_planner_backup.json`);
+            dlAnchor.click();
+            showToast("💾 Full Data Backup Downloaded!");
+        }
+
+        /* COUNTDOWN TO FEB 2027 EXAM */
         function updateCountdown() {
             const targetDate = new Date("February 15, 2027 09:00:00").getTime();
             const diff = targetDate - new Date().getTime();
@@ -466,184 +459,124 @@
         }
         setInterval(updateCountdown, 1000); updateCountdown();
 
-        /* LIVE MULTI-SCREEN MONITORING ACCESS */
-        function startScreenShareTracker() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-                navigator.mediaDevices.getDisplayMedia({ video: true }).then(stream => {
-                    document.getElementById('student-screen-hidden').srcObject = stream;
-                    document.getElementById('admin-screen-live-feed1').srcObject = stream;
-                    showToast("🖥️ Screen Tracking Active!");
-                }).catch(err => {
-                    alert("Screen Share Permission Denied!");
-                });
+        /* DAILY STUDY CHART */
+        document.getElementById('chart-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
+            chartItems.push({
+                id: Date.now(),
+                subject: document.getElementById('chart-subject').value,
+                topic: document.getElementById('chart-topic').value,
+                startTime: document.getElementById('chart-start-time').value,
+                endTime: document.getElementById('chart-end-time').value,
+                done: false
+            });
+            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
+            e.target.reset();
+            renderDailyChart();
+            showToast("Added to Daily Routine!");
+        });
+
+        function renderDailyChart() {
+            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
+            const tbody = document.getElementById('daily-chart-tbody');
+            tbody.innerHTML = '';
+
+            if (chartItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subjects added to today's chart yet.</td></tr>`;
+                return;
             }
+
+            chartItems.forEach(item => {
+                tbody.innerHTML += `
+                    <tr style="${item.done ? 'background:#D1FAE5; text-decoration:line-through;' : ''}">
+                        <td><strong>${item.startTime} - ${item.endTime}</strong></td>
+                        <td><strong style="color:var(--primary);">${item.subject}</strong></td>
+                        <td>${item.topic}</td>
+                        <td>
+                            <button class="btn-done" onclick="toggleChartDone(${item.id})">${item.done ? '✓ Done' : 'Mark Done'}</button>
+                            <button class="btn-del" onclick="deleteChartItem(${item.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
 
-        /* GROUP VIDEO & VOICE CALL ENGINE */
-        let localMediaStream = null;
-        function startGroupVideoCall() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-                    localMediaStream = stream;
-                    document.getElementById('self-video-stream').srcObject = stream;
-                    showToast("📹 Group Video/Voice Stream Active!");
-                }).catch(err => alert("Camera/Mic Access Denied!"));
-            }
+        function toggleChartDone(id) {
+            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
+            chartItems = chartItems.map(item => {
+                if (item.id === id) item.done = !item.done;
+                return item;
+            });
+            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
+            renderDailyChart();
         }
 
-        function toggleMuteAudio() {
-            if (localMediaStream) {
-                const audioTrack = localMediaStream.getAudioTracks()[0];
-                if (audioTrack) {
-                    audioTrack.enabled = !audioTrack.enabled;
-                    showToast(audioTrack.enabled ? "🎤 Mic Unmuted" : "🔇 Mic Muted");
-                }
-            }
+        function deleteChartItem(id) {
+            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]').filter(item => item.id !== id);
+            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
+            renderDailyChart();
+        }
+        renderDailyChart();
+
+        /* DOWNLOAD CHART AS IMAGE */
+        function downloadChartAsImage() {
+            const chartArea = document.getElementById('printable-chart-area');
+            html2canvas(chartArea, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `My-Daily-Study-Chart.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast("📥 Daily Study Chart Downloaded!");
+            });
         }
 
-        /* DYNAMIC SYLLABUS TRACKER LOGIC */
-        let userXP = parseInt(localStorage.getItem('user_xp') || '0');
-
-        function updateXPDisplay() {
-            document.getElementById('user-xp-disp').innerText = userXP;
-            document.getElementById('user-level-disp').innerText = Math.floor(userXP / 100) + 1;
-            document.getElementById('lb-current-xp').innerText = `${userXP} XP`;
-            localStorage.setItem('user_xp', userXP);
-        }
-        updateXPDisplay();
-
-        function updateSyllablesProgress(sub, checkbox) {
-            const container = checkbox.closest('.syll-checklist');
-            const total = container.querySelectorAll('input[type="checkbox"]').length;
-            const checked = container.querySelectorAll('input[type="checkbox"]:checked').length;
-            const perc = Math.round((checked / total) * 100);
-
-            document.getElementById(`syll-${sub}-perc`).innerText = `${perc}%`;
-            document.getElementById(`syll-${sub}-bar`).style.width = `${perc}%`;
-
-            if (checkbox.checked) {
-                userXP += 25;
-                updateXPDisplay();
-                showToast(`🎉 Chapter Finished! +25 XP Earned!`);
-            }
-        }
-
-        /* CREATE NEW STUDY GROUP */
-        function createNewStudyGroup() {
-            const groupName = prompt("Enter New Study Group Name:");
-            if (groupName) {
-                const box = document.getElementById('community-chat-box');
-                box.innerHTML += `<div class="chat-bubble" style="background:#EFF6FF; border-color:#2563EB;"><strong>📢 Group Created:</strong> ${groupName}</div>`;
-                showToast(`Group "${groupName}" Created!`);
-            }
-        }
-
-        /* GMAIL LOGIN & ADMIN ACCESS */
-        let currentUserEmail = localStorage.getItem('study_user_email') || 'Guest Student';
-        function updateLoginUI() {
-            document.getElementById('user-login-status').innerText = `Logged in: ${currentUserEmail}`;
-            document.getElementById('sidebar-user-avatar').innerText = currentUserEmail.charAt(0).toUpperCase();
-
-            const isAdmin = ADMIN_EMAILS.some(a => a.toLowerCase() === currentUserEmail.trim().toLowerCase());
-            document.getElementById('owner-admin-btn').style.display = isAdmin ? 'flex' : 'none';
-        }
-        updateLoginUI();
-
-        function handleFirebaseGmailLogin() {
-            const gmail = document.getElementById('user-gmail-input').value;
-            if(gmail) {
-                currentUserEmail = gmail;
-                localStorage.setItem('study_user_email', gmail);
-                updateLoginUI();
-                closeModal('login-modal');
-                showToast("Logged in!");
-            }
-        }
-
-        function grantVipAccessDirect() {
-            const email = document.getElementById('admin-vip-target-email').value;
-            if(email) {
-                localStorage.setItem(`vip_status_${email.toLowerCase()}`, 'true');
-                showToast(`VIP Pass Granted to ${email}!`);
-            }
-        }
-
-        /* CALENDAR */
-        let currentDate = new Date();
-        function changeMonth(delta) {
-            currentDate.setMonth(currentDate.getMonth() + delta);
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('cal-grid');
-            if(!grid) return;
-            grid.innerHTML = '';
-            document.getElementById('cal-month-title').innerText = currentDate.toLocaleString('default', { month: 'short', year: 'numeric' });
-
-            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div style="font-weight:bold; color:var(--text-muted);">${d}</div>`);
-            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const isToday = (d === new Date().getDate() && currentDate.getMonth() === new Date().getMonth());
-                grid.innerHTML += `<div style="padding:6px; background:rgba(0,0,0,0.02); border-radius:6px; ${isToday ? 'background:var(--primary); color:white;' : ''}">${d}</div>`;
-            }
-        }
-        renderCalendar();
-
-        /* TASKS */
+        /* TASKS CHECKLIST */
         document.getElementById('task-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
             tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value, done: false });
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
             e.target.reset();
             renderTasks();
-            showToast("Goal Saved!");
+            showToast("Personal Task Saved!");
         });
 
         function renderTasks() {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
             const list = document.getElementById('task-list');
-            const dashList = document.getElementById('dash-tasks');
-            if(list) list.innerHTML = '';
-            if(dashList) dashList.innerHTML = '';
+            list.innerHTML = '';
 
             tasks.forEach(t => {
-                const html = `
+                list.innerHTML += `
                     <li class="${t.done ? 'completed' : ''}">
                         <div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div>
                         <div>
-                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Completed' : 'Mark Done (+25 XP)'}</button>
+                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Done' : 'Mark Done'}</button>
                             <button class="btn-del" onclick="delTask(${t.id})">Delete</button>
                         </div>
                     </li>`;
-                if(list) list.innerHTML += html;
-                if(dashList) dashList.innerHTML += html;
             });
         }
 
         function toggleTaskDone(id) {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
             tasks = tasks.map(t => {
-                if(t.id === id) {
-                    if(!t.done) { userXP += 25; updateXPDisplay(); showToast("🎉 +25 XP Earned!"); }
-                    t.done = !t.done;
-                }
+                if(t.id === id) t.done = !t.done;
                 return t;
             });
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
             renderTasks();
         }
 
         function delTask(id) {
-            let tasks = JSON.parse(localStorage.getItem('user_tasks') || '[]').filter(t => t.id !== id);
-            localStorage.setItem('user_tasks', JSON.stringify(tasks));
+            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]').filter(t => t.id !== id);
+            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
             renderTasks();
         }
         renderTasks();
 
-        /* COMMUNITY */
+        /* COMMUNITY FORUM */
         let globalPosts = JSON.parse(localStorage.getItem('global_community_posts') || '[]');
         function renderCommunityPosts() {
             const box = document.getElementById('community-chat-box');
@@ -671,6 +604,45 @@
             }
         }
         renderCommunityPosts();
+
+        /* CALENDAR */
+        let currentDate = new Date();
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('cal-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+            document.getElementById('cal-month-title').innerText = currentDate.toLocaleString('default', { month: 'short', year: 'numeric' });
+
+            ['M','T','W','T','F','S','S'].forEach(d => grid.innerHTML += `<div style="font-weight:bold; color:var(--text-muted);">${d}</div>`);
+            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = (d === new Date().getDate() && currentDate.getMonth() === new Date().getMonth());
+                grid.innerHTML += `<div style="padding:6px; background:rgba(0,0,0,0.02); border-radius:6px; ${isToday ? 'background:var(--primary); color:white;' : ''}">${d}</div>`;
+            }
+        }
+        renderCalendar();
+
+        /* GOAL MODAL */
+        function saveGoalFromModal() {
+            const exam = document.getElementById('modal-goal-exam').value;
+            const percent = document.getElementById('modal-goal-percent').value;
+            if(exam && percent) {
+                const str = `${exam} — Target Score: ${percent}%`;
+                document.getElementById('main-goal-display').innerText = str;
+                localStorage.setItem('my_personal_goal', str);
+                closeModal('goal-modal');
+                showToast("Goal Saved!");
+            }
+        }
+        if(localStorage.getItem('my_personal_goal')) {
+            document.getElementById('main-goal-display').innerText = localStorage.getItem('my_personal_goal');
+        }
     </script>
 </body>
 </html>
