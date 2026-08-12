@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner - Ultimate Student Super App</title>
+    <title>My Study Planner - Offline Daily Schedule & Task Planner</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
@@ -16,18 +16,18 @@
 
     <style>
         :root {
-            --bg-main: #F4F7FA;
+            --bg-main: #F3F6F9;
             --sidebar-bg: #FFFFFF;
             --card-bg: #FFFFFF;
-            --primary: #2563EB;
-            --primary-light: #EFF6FF;
-            --primary-gradient: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-            --vip-gradient: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-            --pw-gradient: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
-            --text-main: #0F172A;
+            --primary: #0084FF;
+            --primary-light: #EBF5FF;
+            --primary-gradient: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+            --vip-gradient: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            --text-main: #1E293B;
             --text-muted: #64748B;
             --border: #E2E8F0;
             --danger: #EF4444;
+            --warning: #F59E0B;
             --success: #10B981;
         }
 
@@ -61,83 +61,69 @@
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .header-brand-logo { display: flex; align-items: center; gap: 12px; }
         .header-brand-logo i { font-size: 32px; color: var(--primary); }
-        .header-title h1 { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .header-title h1 { font-size: 26px; font-weight: 800; color: var(--primary); }
 
         .header-watch-card {
-            background: #0F172A; color: #38BDF8; padding: 8px 16px; border-radius: 12px;
-            display: flex; align-items: center; gap: 8px; font-family: monospace; font-size: 15px; font-weight: 800;
+            background: #0F172A; color: #38BDF8; padding: 10px 18px; border-radius: 14px;
+            display: flex; align-items: center; gap: 10px; font-family: monospace; font-size: 16px; font-weight: 800;
             border: 1px solid #0284C7;
         }
 
-        .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .btn-action { padding: 9px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; border: none; }
-        .btn-call { background: var(--primary-gradient); color: white; }
-        .btn-vip { background: var(--vip-gradient); color: white; }
-        .btn-download { background: #10B981; color: white; }
-
-        .quote-card {
-            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
-            border: 1px solid #93C5FD; padding: 12px 18px; border-radius: 14px; margin-bottom: 20px;
-            color: #1E40AF; font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;
-        }
+        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .btn-call { background: var(--primary-gradient); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .btn-download { background: #10B981; color: white; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
 
         .big-goal-card {
             background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); color: white;
-            padding: 16px 22px; border-radius: 16px; margin-bottom: 20px; display: flex;
+            padding: 18px 24px; border-radius: 16px; margin-bottom: 20px; display: flex;
             justify-content: space-between; align-items: center; border-left: 6px solid var(--primary);
         }
-        .big-goal-card h2 { font-size: 18px; font-weight: 800; color: #38BDF8; }
+        .big-goal-card h2 { font-size: 20px; font-weight: 800; color: #38BDF8; }
 
         .board-banner {
-            background: var(--primary-gradient); color: white; border-radius: 18px; padding: 20px 24px;
-            margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center;
+            background: var(--primary-gradient); color: white; border-radius: 20px; padding: 22px 28px;
+            margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .countdown-grid { display: flex; gap: 10px; }
-        .time-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 12px; text-align: center; min-width: 62px; }
-        .time-box span { font-size: 20px; font-weight: 700; display: block; }
-        .time-box label { font-size: 9px; text-transform: uppercase; opacity: 0.8; font-weight: 600; }
+        .countdown-grid { display: flex; gap: 12px; }
+        .time-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px); padding: 10px 16px; border-radius: 14px; text-align: center; min-width: 68px; }
+        .time-box span { font-size: 22px; font-weight: 700; display: block; }
+        .time-box label { font-size: 10px; text-transform: uppercase; opacity: 0.8; font-weight: 600; }
 
-        .dashboard-grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .card-header { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .dashboard-grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 22px; }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 22px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .card-header { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
 
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        input, select, textarea { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
+        input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; background: var(--card-bg); color: var(--text-main); }
 
-        #printable-chart-area { background: #FFFFFF; padding: 20px; border-radius: 16px; border: 2px solid var(--primary); }
+        #printable-chart-area { background: #FFFFFF; padding: 22px; border-radius: 18px; border: 2px solid var(--primary); }
         .chart-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .chart-table th, .chart-table td { padding: 10px; border: 1px solid var(--border); text-align: left; font-size: 12px; }
+        .chart-table th, .chart-table td { padding: 12px; border: 1px solid var(--border); text-align: left; font-size: 13px; }
         .chart-table th { background: var(--primary-light); color: var(--primary); font-weight: 800; }
 
-        .item-list { list-style: none; }
-        .item-list li {
-            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px;
-            margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;
-        }
-        .item-list li.completed { background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.7; }
+        .task-status-tag { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+        .status-pending { background: #FEF3C7; color: #B45309; }
+        .status-completed { background: #D1FAE5; color: #065F46; }
+        .status-skipped { background: #FEE2E2; color: #991B1B; }
 
-        .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; padding: 5px 10px; border-radius: 6px; font-weight: 700; cursor: pointer; margin-right: 6px; font-size: 12px; }
-        .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 5px 10px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px; }
-
-        .community-card { background: var(--card-bg); border-radius: 18px; border: 1px solid var(--border); overflow: hidden; }
-        .community-header { background: var(--pw-gradient); color: white; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-box { height: 320px; overflow-y: auto; padding: 16px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 12px; }
-        .chat-bubble { background: var(--card-bg); border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; max-width: 85%; }
+        .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 4px; font-size: 12px; }
+        .btn-skip { background: #FEF3C7; color: #B45309; border: 1px solid #F59E0B; padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-right: 4px; font-size: 12px; }
+        .btn-del { background: #FEE2E2; color: var(--danger); border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 12px; }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999;
             justify-content: center; align-items: center;
         }
-        .modal-card { background: var(--card-bg); border-radius: 18px; padding: 22px; width: 460px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
+        .modal-card { background: var(--card-bg); border-radius: 20px; padding: 26px; width: 460px; text-align: center; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border); }
 
         #toast-alert {
-            display: none; position: fixed; bottom: 20px; right: 20px; background: #10B981; color: white;
-            padding: 12px 20px; border-radius: 12px; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 1000; font-size: 13px;
+            display: none; position: fixed; bottom: 25px; right: 25px; background: #10B981; color: white;
+            padding: 14px 22px; border-radius: 14px; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 1000; font-size: 13px;
         }
     </style>
 </head>
@@ -149,12 +135,9 @@
     <div class="sidebar">
         <a href="#" class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></a>
         <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('chart', this)" title="Daily Study Chart"><i class="fa-solid fa-calendar-week"></i></li>
-            <li class="nav-item" onclick="switchTab('dashboard', this)" title="Dashboard & Clock"><i class="fa-solid fa-house"></i></li>
-            <li class="nav-item" onclick="switchTab('ai-assistant', this)" title="AI Study Assistant"><i class="fa-solid fa-robot"></i></li>
-            <li class="nav-item" onclick="switchTab('formulas', this)" title="Formula Bank & PYQ"><i class="fa-solid fa-square-root-variable"></i></li>
-            <li class="nav-item" onclick="switchTab('community', this)" title="PW Doubt Community"><i class="fa-solid fa-users"></i></li>
-            <li class="nav-item" onclick="switchTab('tasks', this)" title="Goals & Leaderboard XP"><i class="fa-solid fa-trophy"></i></li>
+            <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Main Schedule Planner"><i class="fa-solid fa-house"></i></li>
+            <li class="nav-item" onclick="switchTab('chart-view', this)" title="Printable Routine Chart"><i class="fa-solid fa-calendar-week"></i></li>
+            <li class="nav-item" onclick="switchTab('notes', this)" title="Offline Scratchpad & Formulas"><i class="fa-solid fa-note-sticky"></i></li>
             <li class="nav-item" onclick="toggleDarkMode()" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></li>
         </ul>
     </div>
@@ -168,26 +151,19 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 <div class="header-title">
                     <h1>My Study Planner</h1>
-                    <p>Personal EdTech Super App & Routine Manager</p>
+                    <p style="color:var(--success); font-weight:bold; font-size:12px;">🟢 100% Fully Offline Mode Active</p>
                 </div>
             </div>
 
+            <!-- LIVE DIGITAL WATCH -->
             <div class="header-watch-card">
                 <i class="fa-solid fa-clock"></i>
                 <span id="live-digital-clock">00:00:00 AM</span>
             </div>
 
             <div class="header-actions">
-                <button class="btn-action btn-download" onclick="downloadChartAsImage()"><i class="fa-solid fa-download"></i> Download Chart</button>
-                <button class="btn-action btn-call" onclick="backupPlannerData()"><i class="fa-solid fa-floppy-disk"></i> Backup Data</button>
-                <button class="btn-action btn-vip" onclick="openModal('vip-modal')"><i class="fa-solid fa-crown"></i> VIP Pass</button>
+                <button class="btn-download" onclick="downloadChartAsImage()"><i class="fa-solid fa-download"></i> Download Chart (Image)</button>
             </div>
-        </div>
-
-        <!-- MOTIVATIONAL QUOTE -->
-        <div class="quote-card">
-            <span>💡 <strong>Daily Success Quote:</strong> "Success isn't always about greatness. It's about consistency. Consistent hard work leads to success."</span>
-            <span style="font-size:11px; opacity:0.8;">🔥 Streak: 7 Days</span>
         </div>
 
         <div class="big-goal-card">
@@ -195,114 +171,11 @@
                 <p>🎯 MY PERSONAL ACADEMIC TARGET</p>
                 <h2 id="main-goal-display">UP Board Class 10th — Target Score: 95%</h2>
             </div>
-            <button class="btn-action btn-call" style="background: rgba(255,255,255,0.1);" onclick="openModal('goal-modal')">Edit Goal</button>
+            <button class="btn-call" style="background: rgba(255,255,255,0.1);" onclick="openModal('goal-modal')">Edit Goal</button>
         </div>
 
-        <!-- 1. DAILY STUDY CHART TAB -->
-        <div id="tab-chart" class="tab-panel active">
-            <div class="dashboard-grid">
-                <div>
-                    <div class="card">
-                        <div class="card-header">➕ Add Subject To Daily Routine</div>
-                        <form id="chart-form">
-                            <div class="input-group">
-                                <input type="text" id="chart-subject" placeholder="Subject Name (e.g. Physics / Maths)" required>
-                                <input type="text" id="chart-topic" placeholder="Topic / Chapter to Study" required>
-                                <div style="display:flex; gap:10px;">
-                                    <div style="flex:1;">
-                                        <label style="font-size:11px; font-weight:bold;">Start Time:</label>
-                                        <input type="time" id="chart-start-time" required>
-                                    </div>
-                                    <div style="flex:1;">
-                                        <label style="font-size:11px; font-weight:bold;">End Time:</label>
-                                        <input type="time" id="chart-end-time" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-action btn-call" style="width:100%; justify-content:center;">Add to Daily Routine</button>
-                        </form>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">📝 Quick Revision Scratchpad</div>
-                        <textarea placeholder="Write down important formulas, definitions or reminders here..." style="width:100%; height:120px;"></textarea>
-                    </div>
-                </div>
-
-                <div>
-                    <div id="printable-chart-area">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
-                            <div>
-                                <h2 style="color:var(--primary); font-weight:800; font-size:18px;">📘 MY DAILY STUDY ROUTINE</h2>
-                                <p style="font-size:12px; color:var(--text-muted);" id="chart-date-display">Date: Today</p>
-                            </div>
-                            <i class="fa-solid fa-graduation-cap" style="font-size:28px; color:var(--primary);"></i>
-                        </div>
-
-                        <table class="chart-table">
-                            <thead>
-                                <tr>
-                                    <th>Timing</th>
-                                    <th>Subject</th>
-                                    <th>Topic / Chapter</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="daily-chart-tbody"></tbody>
-                        </table>
-                    </div>
-
-                    <div class="card" style="background: #F0FDF4; border-color: #86EFAC; margin-top:20px;">
-                        <h4 style="color: #166534; margin-bottom: 8px;">🎧 Focus Ambience Audio</h4>
-                        <audio controls style="width:100%; height:32px;">
-                            <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
-                        </audio>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. AI STUDY ASSISTANT TAB -->
-        <div id="tab-ai-assistant" class="tab-panel">
-            <div class="card">
-                <div class="card-header">🤖 AI Smart Study Assistant</div>
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Ask for formulas, definitions, or study strategies instant response.</p>
-                <div style="height: 250px; overflow-y: auto; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border);" id="ai-chat-box">
-                    <div style="background: var(--card-bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border); font-size: 13px; margin-bottom: 10px;">
-                        <strong>🤖 AI Assistant:</strong> Namaste! Ask me any physics formula, definitions or board exam tips.
-                    </div>
-                </div>
-                <div style="display: flex; gap: 8px; margin-top: 12px;">
-                    <input type="text" id="ai-user-query" placeholder="Ask AI e.g. What is Ohm's Law formula?" style="flex: 1;">
-                    <button class="btn-action btn-call" onclick="askAiAssistant()">Ask AI</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. FORMULA BANK & PYQ TAB -->
-        <div id="tab-formulas" class="tab-panel">
-            <div class="dashboard-grid">
-                <div class="card">
-                    <div class="card-header">📐 Quick Formula Bank</div>
-                    <ul class="item-list">
-                        <li><strong>Ohm's Law:</strong> V = I × R</li>
-                        <li><strong>Kinematics Equation:</strong> v = u + a × t</li>
-                        <li><strong>Power Formula:</strong> P = V × I = I²R</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <div class="card-header">📑 Previous Year Papers (PYQ) Tracker</div>
-                    <ul class="item-list">
-                        <li><label><input type="checkbox"> UP Board 2025 Science Paper</label></li>
-                        <li><label><input type="checkbox"> UP Board 2024 Maths Paper</label></li>
-                        <li><label><input type="checkbox"> UP Board 2023 Physics Paper</label></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. DASHBOARD & COUNTDOWN TAB -->
-        <div id="tab-dashboard" class="tab-panel">
+        <!-- 1. MAIN DASHBOARD TAB (ADD TASK FORM & LIVE SCHEDULE) -->
+        <div id="tab-dashboard" class="tab-panel active">
             <div class="board-banner">
                 <div class="board-info">
                     <h2>🚨 UP Board Exam Real-Time Countdown 🚨</h2>
@@ -316,73 +189,92 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(-1)">&lt; Prev</button>
-                    <span id="cal-month-title">Month Year</span>
-                    <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(1)">&gt;</button>
-                </div>
-                <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;" id="cal-grid"></div>
-            </div>
-        </div>
-
-        <!-- 5. COMMUNITY TAB -->
-        <div id="tab-community" class="tab-panel">
-            <div class="community-card">
-                <div class="community-header">
-                    <div>
-                        <h2>🔥 PW Student Community Forum</h2>
-                        <p style="font-size: 11px; opacity: 0.9;">Ask Doubts & Connect with Classmates</p>
-                    </div>
-                </div>
-
-                <div class="chat-box" id="community-chat-box"></div>
-
-                <div style="padding: 12px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
-                    <input type="text" id="comm-user-realname" placeholder="Enter Your Real Name">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="comm-msg-input" placeholder="Type your doubt here..." style="flex:1;">
-                        <button class="btn-action btn-call" style="background: var(--pw-gradient);" onclick="postPublicDoubt()">Post Doubt</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. TASKS & LEADERBOARD TAB -->
-        <div id="tab-tasks" class="tab-panel">
             <div class="dashboard-grid">
-                <div class="card">
-                    <div class="card-header">Add Personal Task (+25 XP)</div>
-                    <form id="task-form">
-                        <div class="input-group">
-                            <input type="text" id="task-desc" placeholder="Goal Description" required>
-                            <input type="date" id="task-due" required>
-                        </div>
-                        <button class="btn-action btn-call" style="width:100%; justify-content:center;">Save Goal</button>
-                    </form>
-                    <ul class="item-list" id="task-list" style="margin-top: 12px;"></ul>
+                <div>
+                    <!-- MAIN ADD TASK FORM WITH SUBJECT, CHAPTER, START & END TIME -->
+                    <div class="card">
+                        <div class="card-header">➕ Add Study Task / Schedule</div>
+                        <form id="main-task-form">
+                            <div class="input-group">
+                                <input type="text" id="task-subject" placeholder="Subject Name (e.g. Physics / Maths)" required>
+                                <input type="text" id="task-chapter" placeholder="Chapter / Topic Name" required>
+                                <div style="display:flex; gap:10px;">
+                                    <div style="flex:1;">
+                                        <label style="font-size:11px; font-weight:bold;">Start Time:</label>
+                                        <input type="time" id="task-start-time" required>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size:11px; font-weight:bold;">End Time (Auto-Done):</label>
+                                        <input type="time" id="task-end-time" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-call" style="width:100%; justify-content:center;"><i class="fa-solid fa-plus"></i> Save Task To Main Schedule</button>
+                        </form>
+                    </div>
+
+                    <!-- SAVED MAIN SCHEDULE TASKS LIST -->
+                    <div class="card">
+                        <div class="card-header">📋 Main Saved Tasks Schedule</div>
+                        <div id="main-tasks-container"></div>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">🥇 Weekly XP Leaderboard</div>
-                    <ul class="item-list">
-                        <li>🥇 #1 Aman Verma - 350 XP</li>
-                        <li>🥈 #2 Priya Sharma - 275 XP</li>
-                        <li style="font-weight:bold; background:#E0F2FE;">🥉 #3 You - <span id="lb-current-xp">0 XP</span></li>
-                    </ul>
+                <div>
+                    <!-- CALENDAR -->
+                    <div class="card">
+                        <div class="card-header">
+                            <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(-1)">&lt; Prev</button>
+                            <span id="cal-month-title">Month Year</span>
+                            <button style="background:none; border:none; cursor:pointer;" onclick="changeMonth(1)">&gt;</button>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;" id="cal-grid"></div>
+                    </div>
+
+                    <!-- LO-FI AUDIO PLAYER -->
+                    <div class="card" style="background: #F0FDF4; border-color: #86EFAC;">
+                        <h4 style="color: #166534; margin-bottom: 8px;">🎧 Offline Ambient Sound Player</h4>
+                        <audio controls style="width:100%; height:32px;">
+                            <source src="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg" type="audio/ogg">
+                        </audio>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
+        <!-- 2. PRINTABLE ROUTINE CHART VIEW TAB -->
+        <div id="tab-chart-view" class="tab-panel">
+            <div id="printable-chart-area">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
+                    <div>
+                        <h2 style="color:var(--primary); font-weight:800; font-size:20px;">📘 MY DAILY STUDY ROUTINE CHART</h2>
+                        <p style="font-size:12px; color:var(--text-muted);" id="chart-date-display">Date: Today</p>
+                    </div>
+                    <i class="fa-solid fa-graduation-cap" style="font-size:32px; color:var(--primary);"></i>
+                </div>
 
-    <!-- VIP PRICING MODAL -->
-    <div class="modal-overlay" id="vip-modal">
-        <div class="modal-card">
-            <h3 style="color: #6D28D9;">👑 VIP Membership Plans</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin:10px 0;">Unlock unlimited features and priority AI response.</p>
-            <button class="btn-action btn-vip" style="width: 100%; justify-content: center;" onclick="closeModal('vip-modal')">Close Window</button>
+                <table class="chart-table">
+                    <thead>
+                        <tr>
+                            <th>Time Duration</th>
+                            <th>Subject Name</th>
+                            <th>Chapter / Topic</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daily-chart-tbody"></tbody>
+                </table>
+            </div>
         </div>
+
+        <!-- 3. NOTES & FORMULAS SCRATCHPAD TAB -->
+        <div id="tab-notes" class="tab-panel">
+            <div class="card">
+                <div class="card-header">📝 Personal Formula & Notes Scratchpad</div>
+                <textarea id="offline-notes-area" placeholder="Write down key formulas or revision points here. It saves automatically..." style="width:100%; height:280px;"></textarea>
+            </div>
+        </div>
+
     </div>
 
     <!-- TARGET GOAL EDIT MODAL -->
@@ -393,7 +285,7 @@
                 <input type="text" id="modal-goal-exam" placeholder="Target Exam (e.g. UP Board Class 10)">
                 <input type="number" id="modal-goal-percent" placeholder="Target Score % (e.g. 95)">
             </div>
-            <button class="btn-action btn-call" style="width: 100%; justify-content: center;" onclick="saveGoalFromModal()">Save Goal</button>
+            <button class="btn-call" style="width: 100%; justify-content: center;" onclick="saveGoalFromModal()">Save Target Goal</button>
         </div>
     </div>
 
@@ -423,31 +315,7 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        /* AI ASSISTANT */
-        function askAiAssistant() {
-            const query = document.getElementById('ai-user-query').value;
-            if(!query) return;
-            const box = document.getElementById('ai-chat-box');
-            box.innerHTML += `<div style="background:#EFF6FF; padding:8px 12px; border-radius:10px; margin-bottom:8px; font-size:13px;"><strong>You:</strong> ${query}</div>`;
-            document.getElementById('ai-user-query').value = '';
-            
-            setTimeout(() => {
-                box.innerHTML += `<div style="background:var(--card-bg); padding:8px 12px; border-radius:10px; margin-bottom:8px; border:1px solid var(--border); font-size:13px;"><strong>🤖 AI Assistant:</strong> Great question! Focus on core formulas and daily revision to master this concept.</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 600);
-        }
-
-        /* DATA BACKUP */
-        function backupPlannerData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `my_study_planner_backup.json`);
-            dlAnchor.click();
-            showToast("💾 Full Data Backup Downloaded!");
-        }
-
-        /* COUNTDOWN TO FEB 2027 EXAM */
+        /* REALTIME COUNTDOWN */
         function updateCountdown() {
             const targetDate = new Date("February 15, 2027 09:00:00").getTime();
             const diff = targetDate - new Date().getTime();
@@ -459,65 +327,110 @@
         }
         setInterval(updateCountdown, 1000); updateCountdown();
 
-        /* DAILY STUDY CHART */
-        document.getElementById('chart-form').addEventListener('submit', (e) => {
+        /* MAIN SCHEDULE TASK MANAGEMENT */
+        document.getElementById('main-task-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
-            chartItems.push({
+            let tasks = JSON.parse(localStorage.getItem('my_offline_tasks') || '[]');
+            tasks.push({
                 id: Date.now(),
-                subject: document.getElementById('chart-subject').value,
-                topic: document.getElementById('chart-topic').value,
-                startTime: document.getElementById('chart-start-time').value,
-                endTime: document.getElementById('chart-end-time').value,
-                done: false
+                subject: document.getElementById('task-subject').value,
+                chapter: document.getElementById('task-chapter').value,
+                startTime: document.getElementById('task-start-time').value,
+                endTime: document.getElementById('task-end-time').value,
+                status: 'pending' // pending, completed, skipped
             });
-            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
+            localStorage.setItem('my_offline_tasks', JSON.stringify(tasks));
             e.target.reset();
-            renderDailyChart();
-            showToast("Added to Daily Routine!");
+            renderTasks();
+            showToast("Task Saved To Main Schedule!");
         });
 
-        function renderDailyChart() {
-            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
+        function renderTasks() {
+            let tasks = JSON.parse(localStorage.getItem('my_offline_tasks') || '[]');
+            const container = document.getElementById('main-tasks-container');
             const tbody = document.getElementById('daily-chart-tbody');
+            
+            container.innerHTML = '';
             tbody.innerHTML = '';
 
-            if (chartItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No subjects added to today's chart yet.</td></tr>`;
+            if (tasks.length === 0) {
+                container.innerHTML = `<p style="color:var(--text-muted); font-size:13px; text-align:center;">No tasks saved yet. Add your first study task above!</p>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No tasks added to today's chart yet.</td></tr>`;
                 return;
             }
 
-            chartItems.forEach(item => {
+            tasks.forEach(t => {
+                let statusTag = `<span class="task-status-tag status-pending">Pending</span>`;
+                if(t.status === 'completed') statusTag = `<span class="task-status-tag status-completed">✓ Completed</span>`;
+                if(t.status === 'skipped') statusTag = `<span class="task-status-tag status-skipped">Skipped</span>`;
+
+                // MAIN LIST HTML
+                container.innerHTML += `
+                    <div style="background:rgba(0,0,0,0.02); border:1px solid var(--border); padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong style="color:var(--primary); font-size:14px;">${t.subject}</strong> — ${t.chapter}<br>
+                            <small style="color:var(--text-muted);">⏰ ${t.startTime} to ${t.endTime}</small>
+                            <span style="margin-left:8px;">${statusTag}</span>
+                        </div>
+                        <div>
+                            ${t.status === 'pending' ? `<button class="btn-done" onclick="setTaskStatus(${t.id}, 'completed')">✓ Done</button>` : ''}
+                            ${t.status === 'pending' ? `<button class="btn-skip" onclick="setTaskStatus(${t.id}, 'skipped')">Skip</button>` : ''}
+                            <button class="btn-del" onclick="deleteTask(${t.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+
+                // PRINTABLE CHART HTML
                 tbody.innerHTML += `
-                    <tr style="${item.done ? 'background:#D1FAE5; text-decoration:line-through;' : ''}">
-                        <td><strong>${item.startTime} - ${item.endTime}</strong></td>
-                        <td><strong style="color:var(--primary);">${item.subject}</strong></td>
-                        <td>${item.topic}</td>
-                        <td>
-                            <button class="btn-done" onclick="toggleChartDone(${item.id})">${item.done ? '✓ Done' : 'Mark Done'}</button>
-                            <button class="btn-del" onclick="deleteChartItem(${item.id})">Delete</button>
-                        </td>
+                    <tr style="${t.status === 'completed' ? 'background:#D1FAE5;' : (t.status === 'skipped' ? 'background:#FEE2E2;' : '')}">
+                        <td><strong>${t.startTime} - ${t.endTime}</strong></td>
+                        <td><strong style="color:var(--primary);">${t.subject}</strong></td>
+                        <td>${t.chapter}</td>
+                        <td>${statusTag}</td>
                     </tr>
                 `;
             });
         }
 
-        function toggleChartDone(id) {
-            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]');
-            chartItems = chartItems.map(item => {
-                if (item.id === id) item.done = !item.done;
-                return item;
+        function setTaskStatus(id, newStatus) {
+            let tasks = JSON.parse(localStorage.getItem('my_offline_tasks') || '[]');
+            tasks = tasks.map(t => {
+                if(t.id === id) t.status = newStatus;
+                return t;
             });
-            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
-            renderDailyChart();
+            localStorage.setItem('my_offline_tasks', JSON.stringify(tasks));
+            renderTasks();
+            showToast(`Task Status Updated: ${newStatus}`);
         }
 
-        function deleteChartItem(id) {
-            let chartItems = JSON.parse(localStorage.getItem('my_daily_chart') || '[]').filter(item => item.id !== id);
-            localStorage.setItem('my_daily_chart', JSON.stringify(chartItems));
-            renderDailyChart();
+        function deleteTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('my_offline_tasks') || '[]').filter(t => t.id !== id);
+            localStorage.setItem('my_offline_tasks', JSON.stringify(tasks));
+            renderTasks();
         }
-        renderDailyChart();
+
+        /* BACKGROUND CONTINUOUS CHECKER FOR AUTOMATIC TASK COMPLETION AT END TIME */
+        setInterval(() => {
+            const now = new Date();
+            const currentTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            let tasks = JSON.parse(localStorage.getItem('my_offline_tasks') || '[]');
+            let updated = false;
+
+            tasks.forEach(t => {
+                if (t.status === 'pending' && t.endTime === currentTimeStr && now.getSeconds() === 0) {
+                    t.status = 'completed';
+                    updated = true;
+                    showToast(`⏰ Time Complete! Task "${t.subject}" Auto-Marked Done!`);
+                }
+            });
+
+            if (updated) {
+                localStorage.setItem('my_offline_tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }, 1000);
+
+        renderTasks();
 
         /* DOWNLOAD CHART AS IMAGE */
         function downloadChartAsImage() {
@@ -531,79 +444,12 @@
             });
         }
 
-        /* TASKS CHECKLIST */
-        document.getElementById('task-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
-            tasks.push({ id: Date.now(), title: document.getElementById('task-desc').value, due: document.getElementById('task-due').value, done: false });
-            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
-            e.target.reset();
-            renderTasks();
-            showToast("Personal Task Saved!");
+        /* OFFLINE NOTES SCRATCHPAD */
+        const notesArea = document.getElementById('offline-notes-area');
+        notesArea.value = localStorage.getItem('my_offline_notes') || '';
+        notesArea.addEventListener('input', () => {
+            localStorage.setItem('my_offline_notes', notesArea.value);
         });
-
-        function renderTasks() {
-            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
-            const list = document.getElementById('task-list');
-            list.innerHTML = '';
-
-            tasks.forEach(t => {
-                list.innerHTML += `
-                    <li class="${t.done ? 'completed' : ''}">
-                        <div><strong>${t.title}</strong><br><small style="color:var(--text-muted);">Due: ${t.due}</small></div>
-                        <div>
-                            <button class="btn-done" onclick="toggleTaskDone(${t.id})">${t.done ? '✓ Done' : 'Mark Done'}</button>
-                            <button class="btn-del" onclick="delTask(${t.id})">Delete</button>
-                        </div>
-                    </li>`;
-            });
-        }
-
-        function toggleTaskDone(id) {
-            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]');
-            tasks = tasks.map(t => {
-                if(t.id === id) t.done = !t.done;
-                return t;
-            });
-            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-
-        function delTask(id) {
-            let tasks = JSON.parse(localStorage.getItem('my_personal_tasks') || '[]').filter(t => t.id !== id);
-            localStorage.setItem('my_personal_tasks', JSON.stringify(tasks));
-            renderTasks();
-        }
-        renderTasks();
-
-        /* COMMUNITY FORUM */
-        let globalPosts = JSON.parse(localStorage.getItem('global_community_posts') || '[]');
-        function renderCommunityPosts() {
-            const box = document.getElementById('community-chat-box');
-            if(!box) return;
-            box.innerHTML = '';
-            globalPosts.forEach(p => {
-                box.innerHTML += `
-                    <div class="chat-bubble">
-                        <div style="font-weight:bold; font-size:12px; color:#EA580C;">${p.name}</div>
-                        <p style="font-size:13px; margin-top:2px;">${p.text}</p>
-                    </div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function postPublicDoubt() {
-            const txt = document.getElementById('comm-msg-input').value;
-            const name = document.getElementById('comm-user-realname').value || "Student";
-            if(txt) {
-                globalPosts.push({ name: name, text: txt });
-                localStorage.setItem('global_community_posts', JSON.stringify(globalPosts));
-                document.getElementById('comm-msg-input').value = '';
-                renderCommunityPosts();
-                showToast("Doubt Posted!");
-            }
-        }
-        renderCommunityPosts();
 
         /* CALENDAR */
         let currentDate = new Date();
