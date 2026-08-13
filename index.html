@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyStudyLife - Student Planner & Dashboard</title>
+    <title>MyStudyLife - Student Planner & LMS</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
-    <!-- Google Material Symbols & Modern FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
@@ -43,104 +41,107 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
 
-        /* MYSTUDYLIFE SIDEBAR */
-        .sidebar {
-            width: 76px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; align-items: center; padding: 22px 0; position: fixed; height: 100vh; z-index: 100;
+        /* TOP APP BAR & NAVIGATION DRAWER TOGGLE */
+        .app-header {
+            background: var(--sidebar-bg); border-bottom: 1px solid var(--border);
+            padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 90;
         }
-        .brand-icon {
-            width: 44px; height: 48px; background: var(--primary-gradient); color: white;
-            border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; margin-bottom: 30px; text-decoration: none; box-shadow: 0 4px 14px rgba(0, 132, 255, 0.3);
+        .app-brand { display: flex; align-items: center; gap: 10px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 20px; }
+        .btn-hamburger { background: none; border: none; font-size: 22px; color: var(--text-main); cursor: pointer; }
+
+        /* SLIDE-OUT DRAWER MENU (EXACT MYSTUDYLIFE MENU) */
+        .drawer-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 200;
         }
-        
-        .nav-list { list-style: none; width: 100%; display: flex; flex-direction: column; gap: 18px; align-items: center; }
-        .nav-item {
-            width: 48px; height: 48px; border-radius: 14px; display: flex; justify-content: center; align-items: center;
-            color: var(--text-muted); font-size: 20px; cursor: pointer; transition: all 0.2s ease;
+        .drawer-menu {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--sidebar-bg);
+            z-index: 201; transition: right 0.3s ease; padding: 20px; display: flex; flex-direction: column; overflow-y: auto;
         }
-        .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
+        .drawer-menu.open { right: 0; }
 
-        .main-wrapper { margin-left: 76px; flex: 1; padding: 28px 36px; max-width: 1450px; }
-
-        /* TOP HEADER */
-        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .header-time-title h1 { font-size: 34px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
-        .header-time-title p { font-size: 15px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
-
-        .user-badge {
-            display: flex; align-items: center; gap: 10px; background: var(--card-bg); padding: 8px 16px; border-radius: 30px;
-            border: 1px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .drawer-nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .drawer-nav-item {
+            padding: 12px 16px; border-radius: 12px; font-weight: 700; color: var(--text-main); font-size: 14px;
+            display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s ease;
         }
-        .user-avatar-circle {
-            width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: var(--primary);
-            display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;
+        .drawer-nav-item:hover, .drawer-nav-item.active { background: var(--primary-light); color: var(--primary); }
+        .drawer-submenu { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+
+        .btn-add-new {
+            background: var(--primary-gradient); color: white; border: none; padding: 14px; border-radius: 14px;
+            font-weight: 800; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 8px; margin: 15px 0; box-shadow: 0 4px 14px rgba(0, 132, 255, 0.3);
         }
 
-        /* GRID LAYOUT */
-        .dash-layout-grid { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 28px; }
+        /* MAIN CONTENT AREA */
+        .main-wrapper { padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; flex: 1; }
 
-        /* HERO POMODORO BANNER */
         .hero-banner-card {
-            background: var(--primary-gradient); color: white; border-radius: 24px; padding: 28px;
-            text-align: center; margin-bottom: 25px; position: relative; box-shadow: 0 10px 30px rgba(0, 132, 255, 0.2);
+            background: var(--primary-gradient); color: white; border-radius: 24px; padding: 26px;
+            text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 132, 255, 0.2);
         }
-        .hero-banner-card p { font-size: 13px; opacity: 0.9; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .hero-banner-card h2 { font-size: 26px; font-weight: 800; margin-top: 4px; }
-
+        .hero-banner-card h2 { font-size: 24px; font-weight: 800; margin-top: 4px; }
+        
         .circle-timer-wrap {
-            width: 165px; height: 167px; border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.35);
-            background: white; color: var(--primary); margin: 18px auto; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            width: 160px; height: 160px; border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.35);
+            background: white; color: var(--primary); margin: 16px auto; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
         .circle-timer-wrap span { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-        .circle-timer-wrap h1 { font-size: 36px; font-weight: 800; font-family: monospace; line-height: 1.1; }
+        .circle-timer-wrap h1 { font-size: 36px; font-weight: 800; font-family: monospace; }
 
         .timer-btn-group { display: flex; gap: 10px; justify-content: center; }
-        .btn-timer { padding: 9px 18px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; font-size: 13px; }
+        .btn-timer { padding: 8px 16px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; font-size: 13px; }
         .btn-white { background: white; color: var(--primary); }
-        .btn-trans { background: rgba(255,255,255,0.22); color: white; }
+        .btn-trans { background: rgba(255,255,255,0.2); color: white; }
 
-        /* ANALYTICS CARDS */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 25px; }
-        .stat-card { background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
-        .stat-card h4 { font-size: 13px; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .stat-card h2 { font-size: 32px; font-weight: 800; color: var(--primary); margin-top: 8px; }
+        /* ANALYTICS GRID */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+        .stat-card { background: var(--card-bg); border-radius: 18px; padding: 18px; border: 1px solid var(--border); }
+        .stat-card h4 { font-size: 12px; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .stat-card h2 { font-size: 28px; font-weight: 800; color: var(--primary); margin-top: 6px; }
 
-        /* CARDS & TASK LISTS */
-        .card { background: var(--card-bg); border-radius: 20px; padding: 22px; border: 1px solid var(--border); margin-bottom: 22px; }
-        .card-header { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .card-header { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
 
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        input, select { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
-
-        .btn-call { background: var(--primary-gradient); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-vip { background: var(--vip-gradient); color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
 
         .task-row {
-            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 14px; border-radius: 14px;
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 12px 14px; border-radius: 14px;
+            margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;
         }
         .task-row.completed { background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.75; }
-        .task-row.skipped { background: #FEE2E2; border-color: #EF4444; opacity: 0.65; }
 
-        /* CALENDAR RIGHT COLUMN */
-        .cal-week-bar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-bottom: 15px; }
-        .cal-day-cell { padding: 12px 6px; border-radius: 14px; background: rgba(0,0,0,0.02); text-align: center; cursor: pointer; }
-        .cal-day-cell.active { background: var(--primary); color: white; font-weight: 800; box-shadow: 0 4px 14px rgba(0, 132, 255, 0.3); }
+        .btn-action-small { padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 12px; }
+        .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; }
+        .btn-del { background: #FEE2E2; color: var(--danger); }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999;
             justify-content: center; align-items: center;
         }
-        .modal-card { background: var(--card-bg); border-radius: 24px; padding: 26px; width: 460px; text-align: center; border: 1px solid var(--border); }
+        .modal-card { background: var(--card-bg); border-radius: 22px; padding: 24px; width: 440px; text-align: center; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+
+        /* HELP CENTER DRAWER */
+        .help-drawer {
+            position: fixed; top: 0; right: -380px; width: 360px; height: 100%; background: var(--card-bg);
+            z-index: 300; transition: right 0.3s ease; padding: 20px; box-shadow: -5px 0 25px rgba(0,0,0,0.15); display: flex; flex-direction: column;
+        }
+        .help-drawer.open { right: 0; }
 
         #toast-alert {
-            display: none; position: fixed; bottom: 25px; right: 25px; background: #10B981; color: white;
-            padding: 14px 22px; border-radius: 14px; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 1000;
+            display: none; position: fixed; bottom: 20px; right: 20px; background: #10B981; color: white;
+            padding: 12px 20px; border-radius: 12px; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 1000;
         }
     </style>
 </head>
@@ -148,154 +149,215 @@
 
     <div id="toast-alert">🎉 Alert</div>
 
-    <!-- LEFT EXACT SIDEBAR -->
-    <div class="sidebar">
-        <a href="#" class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></a>
-        <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('dashboard', this)" title="Dashboard"><i class="fa-solid fa-house"></i></li>
-            <li class="nav-item" onclick="switchTab('calendar', this)" title="Calendar"><i class="fa-solid fa-calendar-days"></i></li>
-            <li class="nav-item" onclick="switchTab('tasks', this)" title="Tasks Checklist"><i class="fa-solid fa-list-check"></i></li>
-            <li class="nav-item" onclick="toggleDarkMode()" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i></li>
+    <header class="app-header">
+        <a href="#" class="app-brand"><i class="fa-solid fa-graduation-cap"></i> MyStudyLife</a>
+        <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
+    </header>
+
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+    <div class="drawer-menu" id="drawer-menu">
+        <div class="drawer-header">
+            <span style="font-weight:800; font-size:16px;" id="menu-user-name">ks1007293@gmail.com</span>
+            <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <button class="btn-add-new" onclick="openModal('add-new-modal')"><i class="fa-solid fa-plus"></i> Add New</button>
+
+        <ul class="drawer-nav-list">
+            <li class="drawer-nav-item active" onclick="switchView('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
+            <li class="drawer-nav-item" onclick="switchView('profile')"><i class="fa-solid fa-user"></i> Profile</li>
+            <li class="drawer-nav-item" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i> Calendar</li>
+            
+            <li class="drawer-nav-item" onclick="toggleSubmenu('activities-sub')">
+                <i class="fa-solid fa-layer-group"></i> Activities <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:11px;"></i>
+            </li>
+            <div class="drawer-submenu" id="activities-sub">
+                <div class="drawer-nav-item" onclick="switchView('tasks')"><i class="fa-solid fa-check-to-slot"></i> Tasks</div>
+                <div class="drawer-nav-item" onclick="switchView('exams')"><i class="fa-solid fa-file-pen"></i> Exams</div>
+                <div class="drawer-nav-item" onclick="switchView('classes')"><i class="fa-solid fa-book-open"></i> Classes</div>
+                <div class="drawer-nav-item" onclick="switchView('vacations')"><i class="fa-solid fa-umbrella-beach"></i> Vacations</div>
+                <div class="drawer-nav-item" onclick="switchView('xtra')"><i class="fa-solid fa-bolt"></i> Xtra</div>
+            </div>
+
+            <li class="drawer-nav-item" onclick="switchView('focus-timer')"><i class="fa-solid fa-stopwatch"></i> Focus Timer</li>
+            <li class="drawer-nav-item" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i> Dark Mode</li>
+            <li class="drawer-nav-item" onclick="toggleHelpDrawer()"><i class="fa-solid fa-circle-question"></i> Help Center</li>
+            <li class="drawer-nav-item" onclick="openModal('admin-modal')" id="drawer-admin-btn" style="display:none; color:var(--primary);"><i class="fa-solid fa-shield-halved"></i> Owner Admin Panel</li>
         </ul>
     </div>
 
-    <!-- MAIN WRAPPER -->
     <div class="main-wrapper">
-        
-        <!-- HEADER -->
-        <div class="top-header">
-            <div class="header-time-title">
-                <h1 id="live-time-disp">6:12 PM</h1>
-                <p id="live-date-disp">Wednesday, August 12</p>
+
+        <div id="view-dashboard" class="tab-panel active">
+            <div class="hero-banner-card">
+                <p id="pomo-due-sub">0 tasks due today.</p>
+                <h2>Good Morning.</h2>
+
+                <div class="circle-timer-wrap">
+                    <span>Focus</span>
+                    <h1 id="pomo-clock">25:00</h1>
+                </div>
+
+                <div class="timer-btn-group">
+                    <button class="btn-timer btn-white" onclick="startTimer()">Start</button>
+                    <button class="btn-timer btn-trans" onclick="pauseTimer()">Pause</button>
+                    <button class="btn-timer btn-trans" onclick="resetTimer()">Reset</button>
+                </div>
             </div>
 
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <button class="btn-vip" id="admin-owner-btn" style="display: none;" onclick="openModal('admin-modal')"><i class="fa-solid fa-shield-halved"></i> Owner Admin Panel</button>
-                <div class="user-badge" onclick="openModal('login-modal')">
-                    <div class="user-avatar-circle" id="user-avatar-char">K</div>
-                    <span id="user-email-tag">ks1007293@gmail.com</span>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4><i class="fa-regular fa-clock" style="color:var(--primary);"></i> Pending Tasks</h4>
+                    <h2 id="dash-pending-count">0</h2>
                 </div>
+                <div class="stat-card">
+                    <h4><i class="fa-solid fa-check" style="color:var(--success);"></i> Completed Tasks</h4>
+                    <h2 id="dash-completed-count">0</h2>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">📋 Active Schedule Checklist</div>
+                <div id="dash-tasks-list"></div>
             </div>
         </div>
 
-        <!-- DASHBOARD TAB -->
-        <div id="tab-dashboard" class="tab-panel active">
-            <div class="dash-layout-grid">
-                
-                <!-- LEFT SECTION -->
-                <div>
-                    <!-- CIRCULAR POMODORO BANNER -->
-                    <div class="hero-banner-card">
-                        <p id="pomo-subtitle-due">0 tasks due today.</p>
-                        <h2>Good Evening.</h2>
+        <div id="view-profile" class="tab-panel">
+            <div class="card" style="text-align:center;">
+                <div style="width:70px; height:70px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;" id="profile-initial">K</div>
+                <h3 id="profile-email-text">ks1007293@gmail.com</h3>
+                <p style="font-size:12px; color:var(--success); font-weight:bold; margin-top:4px;">✔ Pre-Activated VIP Student Account</p>
+            </div>
+        </div>
 
-                        <div class="circle-timer-wrap">
-                            <span>Focus</span>
-                            <h1 id="pomo-clock-text">25:00</h1>
-                        </div>
+        <div id="view-calendar" class="tab-panel">
+            <div class="card">
+                <div class="card-header">📅 Calendar & Schedule</div>
+                <div id="calendar-grid-box" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;"></div>
+            </div>
+        </div>
 
-                        <div class="timer-btn-group">
-                            <button class="btn-timer btn-white" onclick="startFocusTimer()">Start Session</button>
-                            <button class="btn-timer btn-trans" onclick="pauseFocusTimer()">Pause</button>
-                            <button class="btn-timer btn-trans" onclick="resetFocusTimer()">Reset</button>
-                        </div>
-                    </div>
+        <div id="view-tasks" class="tab-panel">
+            <div class="card">
+                <div class="card-header">📝 All Saved Tasks</div>
+                <div id="all-tasks-list"></div>
+            </div>
+        </div>
 
-                    <!-- ANALYTICS CARDS -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h4><i class="fa-regular fa-clock" style="color:var(--primary);"></i> Pending Tasks</h4>
-                            <h2 id="pending-stat-num">0</h2>
-                            <span style="font-size: 11px; color: var(--text-muted);">Active schedule</span>
-                        </div>
-                        <div class="stat-card">
-                            <h4><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);"></i> Completed Tasks</h4>
-                            <h2 id="completed-stat-num">0</h2>
-                            <span style="font-size: 11px; color: var(--text-muted);">Finished tasks</span>
-                        </div>
-                    </div>
+        <div id="view-exams" class="tab-panel">
+            <div class="card">
+                <div class="card-header">📑 Exam Schedule</div>
+                <div id="all-exams-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No upcoming exams added yet.</p></div>
+            </div>
+        </div>
 
-                    <!-- ADD TASK FORM -->
-                    <div class="card">
-                        <div class="card-header">➕ Add Daily Study Task</div>
-                        <form id="schedule-task-form">
-                            <div class="input-group">
-                                <input type="text" id="subject-field" placeholder="Subject Name (e.g. Physics / Maths)" required>
-                                <input type="text" id="topic-field" placeholder="Chapter / Topic Name" required>
-                                <div style="display:flex; gap:10px;">
-                                    <div style="flex:1;">
-                                        <label style="font-size:11px; font-weight:bold;">Start Time:</label>
-                                        <input type="time" id="start-time-field" required>
-                                    </div>
-                                    <div style="flex:1;">
-                                        <label style="font-size:11px; font-weight:bold;">End Time (Auto-Done):</label>
-                                        <input type="time" id="end-time-field" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn-call" style="width: 100%;"><i class="fa-solid fa-plus"></i> Save Task To Schedule</button>
-                        </form>
-                    </div>
+        <div id="view-classes" class="tab-panel">
+            <div class="card">
+                <div class="card-header">📚 Classes List</div>
+                <div id="all-classes-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No active classes scheduled.</p></div>
+            </div>
+        </div>
 
-                    <!-- PERMANENT TASKS CHECKLIST -->
-                    <div class="card">
-                        <div class="card-header">📋 Active Saved Tasks</div>
-                        <div id="saved-tasks-wrapper"></div>
-                    </div>
+        <div id="view-vacations" class="tab-panel">
+            <div class="card">
+                <div class="card-header">⚡ Vacations Planner</div>
+                <div id="all-vacations-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No vacations scheduled.</p></div>
+            </div>
+        </div>
+
+        <div id="view-xtra" class="tab-panel">
+            <div class="card">
+                <div class="card-header">⚡ Extra Academic Activities</div>
+                <div id="all-xtra-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No extra activities saved.</p></div>
+            </div>
+        </div>
+
+        <div id="view-focus-timer" class="tab-panel">
+            <div class="card" style="text-align:center;">
+                <div class="card-header">⏱️ Full Screen Focus Timer</div>
+                <h1 id="full-pomo-clock" style="font-size:56px; font-family:monospace; margin:20px 0;">25:00</h1>
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button class="btn-action-small btn-done" onclick="startTimer()">Start</button>
+                    <button class="btn-action-small" style="background:var(--warning); color:white;" onclick="pauseTimer()">Pause</button>
+                    <button class="btn-action-small btn-del" onclick="resetTimer()">Reset</button>
                 </div>
-
-                <!-- RIGHT CALENDAR SECTION -->
-                <div>
-                    <div class="card">
-                        <div class="card-header">
-                            <span>Calendar</span>
-                            <span style="font-size: 12px; color: var(--primary); font-weight:700;">Day ▾</span>
-                        </div>
-
-                        <div class="cal-week-bar" id="calendar-week-row"></div>
-
-                        <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
-                            <p style="font-size: 12px; color: var(--text-muted); text-align: center;">No events scheduled for this day.</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
     </div>
 
-    <!-- PRE-ACTIVATED ADMIN MODAL -->
+    <div class="modal-overlay" id="add-new-modal">
+        <div class="modal-card">
+            <h3>Add New Activity</h3>
+            <form id="add-new-form" style="margin-top:15px;">
+                <div class="input-group">
+                    <select id="modal-activity-type" required>
+                        <option value="task">Task</option>
+                        <option value="class">Class</option>
+                        <option value="exam">Exam</option>
+                        <option value="vacation">Vacation</option>
+                        <option value="xtra">Xtra</option>
+                    </select>
+                    <input type="text" id="modal-title" placeholder="Title / Subject Name" required>
+                    <input type="text" id="modal-details" placeholder="Details / Chapter Topic" required>
+                    <div style="display:flex; gap:10px;">
+                        <input type="time" id="modal-start-time" required style="flex:1;">
+                        <input type="time" id="modal-end-time" required style="flex:1;">
+                    </div>
+                </div>
+                <button class="btn-add-new" style="width:100%; margin-top:10px;">Save Activity</button>
+            </form>
+            <button style="background:none; border:none; color:var(--text-muted); cursor:pointer; margin-top:8px;" onclick="closeModal('add-new-modal')">Cancel</button>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="admin-modal">
         <div class="modal-card">
-            <h3 style="color: var(--primary);">👑 Owner Admin & VIP Panel Active</h3>
-            <div style="background: #F8FAFC; padding: 15px; border-radius: 14px; text-align: left; margin: 15px 0; border: 1px solid var(--border);">
-                <p style="font-size: 12px;"><strong>Admin Email:</strong> ks1007293@gmail.com</p>
-                <p style="font-size: 12px; color: var(--success); font-weight: bold; margin-top: 4px;">✔ VIP Unlocked & Permanently Active</p>
+            <h3 style="color:var(--primary);">👑 Owner Admin Panel Active</h3>
+            <div style="background:#F8FAFC; padding:15px; border-radius:14px; text-align:left; margin:15px 0; border:1px solid var(--border);">
+                <p style="font-size:12px;"><strong>Authorized Owner Email:</strong> ks1007293@gmail.com</p>
+                <p style="font-size:12px; color:var(--success); font-weight:bold; margin-top:4px;">✔ Pre-Activated Permanent VIP Access</p>
             </div>
-            <button class="btn-call" style="width: 100%;" onclick="closeModal('admin-modal')">Close Panel</button>
+            <button class="btn-add-new" style="width:100%;" onclick="closeModal('admin-modal')">Close Panel</button>
         </div>
     </div>
 
-    <!-- LOGIN MODAL -->
-    <div class="modal-overlay" id="login-modal">
-        <div class="modal-card">
-            <h3>🔑 Firebase & Google Login</h3>
-            <div class="input-group" style="margin-top:15px;">
-                <input type="email" id="login-gmail-field" placeholder="Enter Gmail Address">
-            </div>
-            <button class="btn-call" style="width: 100%;" onclick="executeGmailLogin()">Login Session</button>
+    <div class="help-drawer" id="help-drawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+            <h3>Help Center</h3>
+            <button class="btn-hamburger" onclick="toggleHelpDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="background:#F8FAFC; padding:12px; border-radius:12px; font-size:13px; font-weight:700; cursor:pointer;" onclick="alert('Help Assistant Active')">💬 Ask a question</div>
+            <div style="background:#F8FAFC; padding:12px; border-radius:12px; font-size:13px; font-weight:700; cursor:pointer;" onclick="alert('Issue Reported')">🐞 Report an issue</div>
+            <div style="background:#F8FAFC; padding:12px; border-radius:12px; font-size:13px; font-weight:700; cursor:pointer;" onclick="alert('Feature Requested')">💡 Request a feature</div>
         </div>
     </div>
 
     <script>
-        const AUTHORIZED_GMAILS = ["ks1007293@gmail.com", "globalharmonypro9052@gmail.com"];
+        const OWNER_EMAILS = ["ks1007293@gmail.com", "globalharmonypro9052@gmail.com"];
 
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            if(element) element.classList.add('active');
+        function toggleDrawer() {
+            document.getElementById('drawer-menu').classList.toggle('open');
+            const overlay = document.getElementById('drawer-overlay');
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleHelpDrawer() {
+            document.getElementById('help-drawer').classList.toggle('open');
+        }
+
+        function toggleSubmenu(id) {
+            const sub = document.getElementById(id);
+            sub.style.display = sub.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.drawer-nav-item').forEach(i => i.classList.remove('active'));
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.add('active');
+            toggleDrawer();
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
@@ -308,167 +370,141 @@
             setTimeout(() => { t.style.display = 'none'; }, 4000);
         }
 
-        /* LIVE CLOCK & DATE */
-        function updateLiveClock() {
-            const now = new Date();
-            document.getElementById('live-time-disp').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('live-date-disp').innerText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        /* OWNER PERMISSIONS */
+        let currentUserEmail = localStorage.getItem('study_user_email') || 'ks1007293@gmail.com';
+        function checkPermissions() {
+            document.getElementById('menu-user-name').innerText = currentUserEmail;
+            document.getElementById('profile-email-text').innerText = currentUserEmail;
+            document.getElementById('profile-initial').innerText = currentUserEmail.charAt(0).toUpperCase();
+
+            const isOwner = OWNER_EMAILS.some(e => e.toLowerCase() === currentUserEmail.trim().toLowerCase());
+            document.getElementById('drawer-admin-btn').style.display = isOwner ? 'flex' : 'none';
         }
-        setInterval(updateLiveClock, 1000); updateLiveClock();
+        checkPermissions();
 
-        /* HARDCODED ADMIN & GMAIL LOGIN */
-        let activeUserEmail = localStorage.getItem('study_user_email') || 'ks1007293@gmail.com';
-
-        function checkUserRole() {
-            document.getElementById('user-email-tag').innerText = activeUserEmail;
-            document.getElementById('user-avatar-char').innerText = activeUserEmail.charAt(0).toUpperCase();
-
-            const isAuth = AUTHORIZED_GMAILS.some(e => e.toLowerCase() === activeUserEmail.trim().toLowerCase());
-            document.getElementById('admin-owner-btn').style.display = isAuth ? 'inline-block' : 'none';
-        }
-        checkUserRole();
-
-        function executeGmailLogin() {
-            const mail = document.getElementById('login-gmail-field').value;
-            if(mail) {
-                activeUserEmail = mail;
-                localStorage.setItem('study_user_email', mail);
-                checkUserRole();
-                closeModal('login-modal');
-                showToast("Logged in!");
-            }
+        /* TIMER LOGIC */
+        let pomoTime = 25 * 60, timerInt = null;
+        function updatePomoDisp() {
+            const m = String(Math.floor(pomoTime / 60)).padStart(2, '0');
+            const s = String(pomoTime % 60).padStart(2, '0');
+            document.getElementById('pomo-clock').innerText = `${m}:${s}`;
+            document.getElementById('full-pomo-clock').innerText = `${m}:${s}`;
         }
 
-        /* POMODORO TIMER */
-        let focusTime = 25 * 60, timerInterval = null;
-        function updateFocusDisp() {
-            const m = String(Math.floor(focusTime / 60)).padStart(2, '0');
-            const s = String(focusTime % 60).padStart(2, '0');
-            document.getElementById('pomo-clock-text').innerText = `${m}:${s}`;
-        }
-
-        function startFocusTimer() {
-            if(timerInterval) return;
-            timerInterval = setInterval(() => {
-                if(focusTime > 0) { focusTime--; updateFocusDisp(); }
-                else { clearInterval(timerInterval); showToast("⏰ Focus Session Complete!"); resetFocusTimer(); }
+        function startTimer() {
+            if (timerInt) return;
+            timerInt = setInterval(() => {
+                if (pomoTime > 0) { pomoTime--; updatePomoDisp(); }
+                else { clearInterval(timerInt); showToast("⏰ Focus Session Complete!"); resetTimer(); }
             }, 1000);
         }
-        function pauseFocusTimer() { clearInterval(timerInterval); timerInterval = null; }
-        function resetFocusTimer() { pauseFocusTimer(); focusTime = 25 * 60; updateFocusDisp(); }
+        function pauseTimer() { clearInterval(timerInt); timerInt = null; }
+        function resetTimer() { pauseTimer(); pomoTime = 25 * 60; updatePomoDisp(); }
 
-        /* CALENDAR DAYS ROW */
-        function renderCalendarWeekRow() {
-            const weekRow = document.getElementById('calendar-week-row');
-            weekRow.innerHTML = '';
-            const today = new Date();
-
-            for (let i = -2; i <= 4; i++) {
-                const d = new Date(today);
-                d.setDate(today.getDate() + i);
-                const isToday = i === 0;
-
-                weekRow.innerHTML += `
-                    <div class="cal-day-cell ${isToday ? 'active' : ''}">
-                        <div style="font-size:10px; text-transform:uppercase;">${d.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                        <div style="font-size:18px; font-weight:800; margin-top:4px;">${d.getDate()}</div>
-                    </div>
-                `;
-            }
-        }
-        renderCalendarWeekRow();
-
-        /* PERMANENT TASK STORAGE & AUTO-DONE AT END TIME */
-        document.getElementById('schedule-task-form').addEventListener('submit', (e) => {
+        /* PERMANENT STORAGE FOR ALL ACTIVITIES */
+        document.getElementById('add-new-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            let savedTasks = JSON.parse(localStorage.getItem('permanent_study_tasks') || '[]');
-            savedTasks.push({
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            activities.push({
                 id: Date.now(),
-                subject: document.getElementById('subject-field').value,
-                topic: document.getElementById('topic-field').value,
-                startTime: document.getElementById('start-time-field').value,
-                endTime: document.getElementById('end-time-field').value,
+                type: document.getElementById('modal-activity-type').value,
+                title: document.getElementById('modal-title').value,
+                details: document.getElementById('modal-details').value,
+                startTime: document.getElementById('modal-start-time').value,
+                endTime: document.getElementById('modal-end-time').value,
                 status: 'pending'
             });
-            localStorage.setItem('permanent_study_tasks', JSON.stringify(savedTasks));
+            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
             e.target.reset();
-            renderSavedTasks();
-            showToast("Task Saved!");
+            closeModal('add-new-modal');
+            renderActivities();
+            showToast("Saved Permanently!");
         });
 
-        function renderSavedTasks() {
-            let savedTasks = JSON.parse(localStorage.getItem('permanent_study_tasks') || '[]');
-            const container = document.getElementById('saved-tasks-wrapper');
-            container.innerHTML = '';
+        function renderActivities() {
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            const dashList = document.getElementById('dash-tasks-list');
+            const tasksList = document.getElementById('all-tasks-list');
+            
+            dashList.innerHTML = '';
+            if(tasksList) tasksList.innerHTML = '';
 
             let pendingCount = 0, completedCount = 0;
 
-            if(savedTasks.length === 0) {
-                container.innerHTML = `<p style="font-size:12px; color:var(--text-muted); text-align:center;">No tasks saved yet. Add your first study task above!</p>`;
-            }
+            activities.forEach(a => {
+                if (a.status === 'pending') pendingCount++;
+                if (a.status === 'completed') completedCount++;
 
-            savedTasks.forEach(t => {
-                if(t.status === 'pending') pendingCount++;
-                if(t.status === 'completed') completedCount++;
-
-                container.innerHTML += `
-                    <div class="task-row ${t.status}">
+                const html = `
+                    <div class="task-row ${a.status}">
                         <div>
-                            <strong style="color:var(--primary);">${t.subject}</strong> — ${t.topic}<br>
-                            <small style="color:var(--text-muted);">⏰ ${t.startTime} - ${t.endTime}</small>
+                            <strong style="color:var(--primary);">${a.title}</strong> (${a.type.toUpperCase()}) — ${a.details}<br>
+                            <small style="color:var(--text-muted);">⏰ ${a.startTime} - ${a.endTime}</small>
                         </div>
                         <div>
-                            ${t.status === 'pending' ? `<button onclick="updateStatus(${t.id}, 'completed')" style="background:#D1FAE5; color:#065F46; border:1px solid #10B981; padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer; margin-right:4px;">✓ Done</button>` : ''}
-                            ${t.status === 'pending' ? `<button onclick="updateStatus(${t.id}, 'skipped')" style="background:#FEF3C7; color:#B45309; border:1px solid #F59E0B; padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer; margin-right:4px;">Skip</button>` : ''}
-                            <button onclick="removeTask(${t.id})" style="background:#FEE2E2; color:var(--danger); border:none; padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">Delete</button>
+                            ${a.status === 'pending' ? `<button class="btn-action-small btn-done" onclick="setStatus(${a.id}, 'completed')">✓ Done</button>` : ''}
+                            <button class="btn-action-small btn-del" onclick="deleteActivity(${a.id})">Delete</button>
                         </div>
                     </div>
                 `;
+
+                dashList.innerHTML += html;
+                if(tasksList) tasksList.innerHTML += html;
             });
 
-            document.getElementById('pending-stat-num').innerText = pendingCount;
-            document.getElementById('completed-stat-num').innerText = completedCount;
-            document.getElementById('pomo-subtitle-due').innerText = `${pendingCount} tasks due today.`;
+            document.getElementById('dash-pending-count').innerText = pendingCount;
+            document.getElementById('dash-completed-count').innerText = completedCount;
+            document.getElementById('pomo-due-sub').innerText = `${pendingCount} tasks due today.`;
         }
 
-        function updateStatus(id, status) {
-            let savedTasks = JSON.parse(localStorage.getItem('permanent_study_tasks') || '[]');
-            savedTasks = savedTasks.map(t => {
-                if(t.id === id) t.status = status;
-                return t;
+        function setStatus(id, status) {
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            activities = activities.map(a => {
+                if (a.id === id) a.status = status;
+                return a;
             });
-            localStorage.setItem('permanent_study_tasks', JSON.stringify(savedTasks));
-            renderSavedTasks();
+            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+            renderActivities();
         }
 
-        function removeTask(id) {
-            let savedTasks = JSON.parse(localStorage.getItem('permanent_study_tasks') || '[]').filter(t => t.id !== id);
-            localStorage.setItem('permanent_study_tasks', JSON.stringify(savedTasks));
-            renderSavedTasks();
+        function deleteActivity(id) {
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]').filter(a => a.id !== id);
+            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+            renderActivities();
         }
 
-        /* AUTO DONE CHECKER */
+        /* AUTO DONE AT END TIME */
         setInterval(() => {
             const now = new Date();
-            const currentTimeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            let savedTasks = JSON.parse(localStorage.getItem('permanent_study_tasks') || '[]');
-            let changed = false;
+            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            let updated = false;
 
-            savedTasks.forEach(t => {
-                if(t.status === 'pending' && t.endTime === currentTimeStr && now.getSeconds() === 0) {
-                    t.status = 'completed';
-                    changed = true;
-                    showToast(`⏰ Time Complete! "${t.subject}" Auto-Marked Done!`);
+            activities.forEach(a => {
+                if (a.status === 'pending' && a.endTime === timeStr && now.getSeconds() === 0) {
+                    a.status = 'completed';
+                    updated = true;
+                    showToast(`⏰ Time Complete! "${a.title}" Auto-Marked Done!`);
                 }
             });
 
-            if(changed) {
-                localStorage.setItem('permanent_study_tasks', JSON.stringify(savedTasks));
-                renderSavedTasks();
+            if (updated) {
+                localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+                renderActivities();
             }
         }, 1000);
 
-        renderSavedTasks();
+        renderActivities();
+
+        /* CALENDAR GRID */
+        function renderCalendar() {
+            const box = document.getElementById('calendar-grid-box');
+            box.innerHTML = '';
+            for (let i = 1; i <= 31; i++) {
+                box.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.02); border-radius:8px;">${i}</div>`;
+            }
+        }
+        renderCalendar();
     </script>
 </body>
 </html>
