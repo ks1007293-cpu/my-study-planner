@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyStudyLife - Student Planner & LMS</title>
+    <title>MyStudyLife - Free Student Planner & App</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
@@ -23,6 +23,7 @@
             --primary-light: #EBF5FF;
             --primary-gradient: linear-gradient(135deg, #0084FF 0%, #0052D4 100%);
             --vip-gradient: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+            --pw-gradient: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
             --text-main: #0F172A;
             --text-muted: #64748B;
             --border: #E2E8F0;
@@ -41,9 +42,57 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* TOP APP BAR & NAVIGATION DRAWER TOGGLE */
+        /* ---------------------------------------------------- */
+        /* 1. EXACT MYSTUDYLIFE LANDING / INTRO PAGE STYLES */
+        /* ---------------------------------------------------- */
+        #landing-page-view {
+            background: #FFFFFF; min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: space-between; padding: 25px 20px; text-align: center;
+        }
+        .landing-header { display: flex; justify-content: space-between; align-items: center; }
+        .landing-logo { color: var(--primary); font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .btn-open-app-outline {
+            border: 2px solid var(--primary); color: var(--primary); background: transparent;
+            padding: 8px 20px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer;
+        }
+
+        .landing-hero-body { margin: auto 0; padding: 40px 10px; }
+        .landing-hero-body h1 { font-size: 34px; font-weight: 800; color: #0F172A; line-height: 1.2; margin-bottom: 15px; }
+        .landing-hero-body h1 span { color: var(--primary); }
+        .landing-hero-body p { font-size: 15px; color: var(--text-muted); max-width: 480px; margin: 0 auto 30px; line-height: 1.5; }
+
+        .btn-open-app-solid {
+            background: var(--primary); color: white; border: none; padding: 16px 36px;
+            border-radius: 30px; font-size: 16px; font-weight: 800; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 132, 255, 0.35); display: inline-flex; align-items: center; gap: 10px;
+        }
+
+        .landing-cookie-bar {
+            background: #F8FAFC; border: 1px solid var(--border); padding: 14px 20px;
+            border-radius: 16px; font-size: 12px; color: var(--text-muted); text-align: left;
+            position: relative; margin-top: 20px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 2. INTRO ANIMATED SPLASH SCREEN */
+        /* ---------------------------------------------------- */
+        #splash-screen-view {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #FFFFFF; z-index: 9999; justify-content: center; align-items: center;
+        }
+        .splash-title-text {
+            font-size: 28px; font-weight: 800; font-family: monospace; letter-spacing: 4px;
+            color: #0F172A; animation: pulseText 1.2s infinite alternate;
+        }
+        @keyframes pulseText { from { opacity: 0.4; letter-spacing: 2px; } to { opacity: 1; letter-spacing: 6px; } }
+
+        /* ---------------------------------------------------- */
+        /* 3. MAIN WEB APPLICATION DASHBOARD & DRAWER */
+        /* ---------------------------------------------------- */
+        #app-main-view { display: none; min-height: 100vh; flex-direction: column; }
+
         .app-header {
             background: var(--sidebar-bg); border-bottom: 1px solid var(--border);
             padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -52,7 +101,13 @@
         .app-brand { display: flex; align-items: center; gap: 10px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 20px; }
         .btn-hamburger { background: none; border: none; font-size: 22px; color: var(--text-main); cursor: pointer; }
 
-        /* SLIDE-OUT DRAWER MENU (EXACT MYSTUDYLIFE MENU) */
+        /* VIP TOP PROMO BANNER (AS SEEN IN RECORDING) */
+        .vip-top-promo-banner {
+            background: var(--primary-gradient); color: white; padding: 10px 16px;
+            font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* SLIDE-OUT DRAWER MENU */
         .drawer-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 200;
@@ -78,27 +133,27 @@
             gap: 8px; margin: 15px 0; box-shadow: 0 4px 14px rgba(0, 132, 255, 0.3);
         }
 
-        /* MAIN CONTENT AREA */
         .main-wrapper { padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; flex: 1; }
 
+        /* CIRCULAR FOCUS TIMER CARD */
         .hero-banner-card {
-            background: var(--primary-gradient); color: white; border-radius: 24px; padding: 26px;
-            text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 132, 255, 0.2);
+            background: var(--card-bg); border: 2px solid var(--primary-light); color: var(--text-main); border-radius: 24px; padding: 26px;
+            text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 132, 255, 0.08);
         }
         .hero-banner-card h2 { font-size: 24px; font-weight: 800; margin-top: 4px; }
         
         .circle-timer-wrap {
-            width: 160px; height: 160px; border-radius: 50%; border: 8px solid rgba(255, 255, 255, 0.35);
+            width: 165px; height: 165px; border-radius: 50%; border: 8px solid var(--primary-light);
             background: white; color: var(--primary); margin: 16px auto; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.06);
         }
         .circle-timer-wrap span { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
         .circle-timer-wrap h1 { font-size: 36px; font-weight: 800; font-family: monospace; }
 
         .timer-btn-group { display: flex; gap: 10px; justify-content: center; }
-        .btn-timer { padding: 8px 16px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; font-size: 13px; }
-        .btn-white { background: white; color: var(--primary); }
-        .btn-trans { background: rgba(255,255,255,0.2); color: white; }
+        .btn-timer { padding: 9px 18px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; font-size: 13px; }
+        .btn-primary-blue { background: var(--primary); color: white; }
+        .btn-light-blue { background: var(--primary-light); color: var(--primary); }
 
         /* ANALYTICS GRID */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
@@ -115,15 +170,25 @@
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         input, select, textarea { padding: 12px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-main); }
 
-        .task-row {
-            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 12px 14px; border-radius: 14px;
-            margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+        .activity-item-card {
+            background: rgba(0,0,0,0.02); border: 1px solid var(--border); padding: 14px; border-radius: 14px;
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;
         }
-        .task-row.completed { background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.75; }
+        .activity-item-card.completed { background: #D1FAE5; border-color: #10B981; text-decoration: line-through; opacity: 0.75; }
 
         .btn-action-small { padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 12px; }
         .btn-done { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; }
         .btn-del { background: #FEE2E2; color: var(--danger); }
+
+        /* FILTER TABS (CURRENT, PAST, OVERDUE) AS SEEN IN VIDEO */
+        .filter-tab-bar { display: flex; gap: 8px; margin-bottom: 15px; }
+        .filter-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); font-size: 12px; font-weight: 700; cursor: pointer; }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* VIP PRICING TABLE */
+        .vip-chart-container { width: 100%; border-collapse: collapse; margin: 15px 0; text-align: left; }
+        .vip-chart-container th, .vip-chart-container td { padding: 10px; border: 1px solid var(--border); font-size: 12px; }
+        .vip-chart-container th { background: #F5F3FF; color: #6D28D9; }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -132,7 +197,6 @@
         }
         .modal-card { background: var(--card-bg); border-radius: 22px; padding: 24px; width: 440px; text-align: center; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
 
-        /* HELP CENTER DRAWER */
         .help-drawer {
             position: fixed; top: 0; right: -380px; width: 360px; height: 100%; background: var(--card-bg);
             z-index: 300; transition: right 0.3s ease; padding: 20px; box-shadow: -5px 0 25px rgba(0,0,0,0.15); display: flex; flex-direction: column;
@@ -149,141 +213,195 @@
 
     <div id="toast-alert">🎉 Alert</div>
 
-    <header class="app-header">
-        <a href="#" class="app-brand"><i class="fa-solid fa-graduation-cap"></i> MyStudyLife</a>
-        <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
-    </header>
-
-    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
-    <div class="drawer-menu" id="drawer-menu">
-        <div class="drawer-header">
-            <span style="font-weight:800; font-size:16px;" id="menu-user-name">ks1007293@gmail.com</span>
-            <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-xmark"></i></button>
+    <div id="landing-page-view">
+        <div class="landing-header">
+            <div class="landing-logo"><i class="fa-solid fa-graduation-cap"></i> MyStudyLife</div>
+            <button class="btn-open-app-outline" onclick="launchAppWithIntro()">Open web app</button>
         </div>
 
-        <button class="btn-add-new" onclick="openModal('add-new-modal')"><i class="fa-solid fa-plus"></i> Add New</button>
+        <div class="landing-hero-body">
+            <h1>The free student planner that keeps school life <span>organised.</span></h1>
+            <p>Classes, homework, exams, activities, and revision — planned in one place with your AI study coach, so you're always ahead and on track for your best grades.</p>
+            <button class="btn-open-app-solid" onclick="launchAppWithIntro()"><i class="fa-solid fa-globe"></i> Open the web app</button>
+        </div>
 
-        <ul class="drawer-nav-list">
-            <li class="drawer-nav-item active" onclick="switchView('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
-            <li class="drawer-nav-item" onclick="switchView('profile')"><i class="fa-solid fa-user"></i> Profile</li>
-            <li class="drawer-nav-item" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i> Calendar</li>
-            
-            <li class="drawer-nav-item" onclick="toggleSubmenu('activities-sub')">
-                <i class="fa-solid fa-layer-group"></i> Activities <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:11px;"></i>
-            </li>
-            <div class="drawer-submenu" id="activities-sub">
-                <div class="drawer-nav-item" onclick="switchView('tasks')"><i class="fa-solid fa-check-to-slot"></i> Tasks</div>
-                <div class="drawer-nav-item" onclick="switchView('exams')"><i class="fa-solid fa-file-pen"></i> Exams</div>
-                <div class="drawer-nav-item" onclick="switchView('classes')"><i class="fa-solid fa-book-open"></i> Classes</div>
-                <div class="drawer-nav-item" onclick="switchView('vacations')"><i class="fa-solid fa-umbrella-beach"></i> Vacations</div>
-                <div class="drawer-nav-item" onclick="switchView('xtra')"><i class="fa-solid fa-bolt"></i> Xtra</div>
+        <div class="landing-cookie-bar">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <p>🍪 You trust MyStudyLife with your data. We respect that and use cookies responsibly. We NEVER sell your data to third parties.</p>
+                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="this.parentElement.parentElement.style.display='none'"></i>
             </div>
-
-            <li class="drawer-nav-item" onclick="switchView('focus-timer')"><i class="fa-solid fa-stopwatch"></i> Focus Timer</li>
-            <li class="drawer-nav-item" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i> Dark Mode</li>
-            <li class="drawer-nav-item" onclick="toggleHelpDrawer()"><i class="fa-solid fa-circle-question"></i> Help Center</li>
-            <li class="drawer-nav-item" onclick="openModal('admin-modal')" id="drawer-admin-btn" style="display:none; color:var(--primary);"><i class="fa-solid fa-shield-halved"></i> Owner Admin Panel</li>
-        </ul>
+        </div>
     </div>
 
-    <div class="main-wrapper">
+    <div id="splash-screen-view">
+        <div class="splash-title-text">MYSTUDYLIFE</div>
+    </div>
 
-        <div id="view-dashboard" class="tab-panel active">
-            <div class="hero-banner-card">
-                <p id="pomo-due-sub">0 tasks due today.</p>
-                <h2>Good Morning.</h2>
+    <div id="app-main-view">
+        
+        <div class="vip-top-promo-banner">
+            <span>✨ Kick off the year stress-free — Try Premium FREE for 1 week!</span>
+            <button style="background:white; color:var(--primary); border:none; padding:4px 10px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="openModal('vip-modal')">Get started →</button>
+        </div>
 
-                <div class="circle-timer-wrap">
-                    <span>Focus</span>
-                    <h1 id="pomo-clock">25:00</h1>
+        <header class="app-header">
+            <a href="#" class="app-brand"><i class="fa-solid fa-graduation-cap"></i> MyStudyLife</a>
+            <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
+        </header>
+
+        <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
+        <div class="drawer-menu" id="drawer-menu">
+            <div class="drawer-header">
+                <span style="font-weight:800; font-size:15px;" id="menu-user-name">ks1007293@gmail.com</span>
+                <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <button class="btn-add-new" onclick="openModal('add-new-modal')"><i class="fa-solid fa-plus"></i> Add New</button>
+
+            <ul class="drawer-nav-list">
+                <li class="drawer-nav-item active" onclick="switchView('dashboard')"><i class="fa-solid fa-house"></i> Dashboard</li>
+                <li class="drawer-nav-item" onclick="switchView('profile')"><i class="fa-solid fa-user"></i> Profile</li>
+                <li class="drawer-nav-item" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i> Calendar</li>
+                
+                <li class="drawer-nav-item" onclick="toggleSubmenu('activities-sub')">
+                    <i class="fa-solid fa-layer-group"></i> Activities <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:11px;"></i>
+                </li>
+                <div class="drawer-submenu" id="activities-sub">
+                    <div class="drawer-nav-item" onclick="switchView('tasks')"><i class="fa-solid fa-check-to-slot"></i> Tasks</div>
+                    <div class="drawer-nav-item" onclick="switchView('exams')"><i class="fa-solid fa-file-pen"></i> Exams</div>
+                    <div class="drawer-nav-item" onclick="switchView('classes')"><i class="fa-solid fa-book-open"></i> Classes</div>
+                    <div class="drawer-nav-item" onclick="switchView('vacations')"><i class="fa-solid fa-umbrella-beach"></i> Vacations</div>
+                    <div class="drawer-nav-item" onclick="switchView('xtra')"><i class="fa-solid fa-bolt"></i> Xtra</div>
                 </div>
 
-                <div class="timer-btn-group">
-                    <button class="btn-timer btn-white" onclick="startTimer()">Start</button>
-                    <button class="btn-timer btn-trans" onclick="pauseTimer()">Pause</button>
-                    <button class="btn-timer btn-trans" onclick="resetTimer()">Reset</button>
+                <li class="drawer-nav-item" onclick="switchView('focus-timer')"><i class="fa-solid fa-stopwatch"></i> Focus Timer</li>
+                <li class="drawer-nav-item" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i> Dark Mode</li>
+                <li class="drawer-nav-item" onclick="toggleHelpDrawer()"><i class="fa-solid fa-circle-question"></i> Help Center</li>
+                <li class="drawer-nav-item" onclick="openModal('admin-modal')" id="drawer-admin-btn" style="display:none; color:var(--primary);"><i class="fa-solid fa-shield-halved"></i> Owner Admin Panel</li>
+            </ul>
+        </div>
+
+        <div class="main-wrapper">
+
+            <div id="view-dashboard" class="tab-panel active">
+                <div class="hero-banner-card">
+                    <p id="pomo-due-sub">0 tasks due today.</p>
+                    <h2>Good Morning.</h2>
+
+                    <div class="circle-timer-wrap">
+                        <span>Focus</span>
+                        <h1 id="pomo-clock">25:00</h1>
+                    </div>
+
+                    <div class="timer-btn-group">
+                        <button class="btn-timer btn-primary-blue" onclick="startTimer()">Start</button>
+                        <button class="btn-timer btn-light-blue" onclick="pauseTimer()">Pause</button>
+                        <button class="btn-timer btn-light-blue" onclick="resetTimer()">Reset</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4><i class="fa-regular fa-clock" style="color:var(--primary);"></i> Pending Tasks</h4>
+                        <h2 id="dash-pending-count">0</h2>
+                    </div>
+                    <div class="stat-card">
+                        <h4><i class="fa-solid fa-check" style="color:var(--success);"></i> Completed Tasks</h4>
+                        <h2 id="dash-completed-count">0</h2>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">📋 Today's Active Schedule Checklist</div>
+                    <div id="dash-tasks-list"></div>
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4><i class="fa-regular fa-clock" style="color:var(--primary);"></i> Pending Tasks</h4>
-                    <h2 id="dash-pending-count">0</h2>
-                </div>
-                <div class="stat-card">
-                    <h4><i class="fa-solid fa-check" style="color:var(--success);"></i> Completed Tasks</h4>
-                    <h2 id="dash-completed-count">0</h2>
+            <div id="view-profile" class="tab-panel">
+                <div class="card" style="text-align:center;">
+                    <div style="width:70px; height:70px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;" id="profile-initial">K</div>
+                    <h3 id="profile-email-text">ks1007293@gmail.com</h3>
+                    <p style="font-size:12px; color:var(--success); font-weight:bold; margin-top:4px;">✔ Pre-Activated VIP Student Account</p>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">📋 Active Schedule Checklist</div>
-                <div id="dash-tasks-list"></div>
-            </div>
-        </div>
-
-        <div id="view-profile" class="tab-panel">
-            <div class="card" style="text-align:center;">
-                <div style="width:70px; height:70px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;" id="profile-initial">K</div>
-                <h3 id="profile-email-text">ks1007293@gmail.com</h3>
-                <p style="font-size:12px; color:var(--success); font-weight:bold; margin-top:4px;">✔ Pre-Activated VIP Student Account</p>
-            </div>
-        </div>
-
-        <div id="view-calendar" class="tab-panel">
-            <div class="card">
-                <div class="card-header">📅 Calendar & Schedule</div>
-                <div id="calendar-grid-box" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;"></div>
-            </div>
-        </div>
-
-        <div id="view-tasks" class="tab-panel">
-            <div class="card">
-                <div class="card-header">📝 All Saved Tasks</div>
-                <div id="all-tasks-list"></div>
-            </div>
-        </div>
-
-        <div id="view-exams" class="tab-panel">
-            <div class="card">
-                <div class="card-header">📑 Exam Schedule</div>
-                <div id="all-exams-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No upcoming exams added yet.</p></div>
-            </div>
-        </div>
-
-        <div id="view-classes" class="tab-panel">
-            <div class="card">
-                <div class="card-header">📚 Classes List</div>
-                <div id="all-classes-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No active classes scheduled.</p></div>
-            </div>
-        </div>
-
-        <div id="view-vacations" class="tab-panel">
-            <div class="card">
-                <div class="card-header">⚡ Vacations Planner</div>
-                <div id="all-vacations-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No vacations scheduled.</p></div>
-            </div>
-        </div>
-
-        <div id="view-xtra" class="tab-panel">
-            <div class="card">
-                <div class="card-header">⚡ Extra Academic Activities</div>
-                <div id="all-xtra-list"><p style="font-size:12px; color:var(--text-muted); text-align:center;">No extra activities saved.</p></div>
-            </div>
-        </div>
-
-        <div id="view-focus-timer" class="tab-panel">
-            <div class="card" style="text-align:center;">
-                <div class="card-header">⏱️ Full Screen Focus Timer</div>
-                <h1 id="full-pomo-clock" style="font-size:56px; font-family:monospace; margin:20px 0;">25:00</h1>
-                <div style="display:flex; gap:10px; justify-content:center;">
-                    <button class="btn-action-small btn-done" onclick="startTimer()">Start</button>
-                    <button class="btn-action-small" style="background:var(--warning); color:white;" onclick="pauseTimer()">Pause</button>
-                    <button class="btn-action-small btn-del" onclick="resetTimer()">Reset</button>
+            <div id="view-calendar" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">📅 Calendar & Schedule</div>
+                    <div class="filter-tab-bar">
+                        <button class="filter-btn active">Day</button>
+                        <button class="filter-btn">Week</button>
+                        <button class="filter-btn">Month</button>
+                    </div>
+                    <div id="calendar-grid-box" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; font-size:12px;"></div>
                 </div>
             </div>
-        </div>
 
+            <div id="view-tasks" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">📝 All Saved Tasks</div>
+                    <div class="filter-tab-bar">
+                        <button class="filter-btn active" onclick="filterActivityView('task', 'current')">Current</button>
+                        <button class="filter-btn" onclick="filterActivityView('task', 'past')">Past</button>
+                        <button class="filter-btn" onclick="filterActivityView('task', 'overdue')">Overdue</button>
+                    </div>
+                    <div id="all-tasks-list"></div>
+                </div>
+            </div>
+
+            <div id="view-exams" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">📑 Exam Schedule</div>
+                    <div class="filter-tab-bar">
+                        <button class="filter-btn active">Current</button>
+                        <button class="filter-btn">Past</button>
+                    </div>
+                    <div id="all-exams-list"></div>
+                </div>
+            </div>
+
+            <div id="view-classes" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">📚 Classes List</div>
+                    <div class="filter-tab-bar">
+                        <button class="filter-btn active">Current</button>
+                        <button class="filter-btn">Past</button>
+                    </div>
+                    <div id="all-classes-list"></div>
+                </div>
+            </div>
+
+            <div id="view-vacations" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">⚡ Vacations Planner</div>
+                    <div id="all-vacations-list"></div>
+                </div>
+            </div>
+
+            <div id="view-xtra" class="tab-panel">
+                <div class="card">
+                    <div class="card-header">⚡ Extra Academic Activities</div>
+                    <div class="filter-tab-bar">
+                        <button class="filter-btn active">Academic</button>
+                        <button class="filter-btn">Non-Academic</button>
+                    </div>
+                    <div id="all-xtra-list"></div>
+                </div>
+            </div>
+
+            <div id="view-focus-timer" class="tab-panel">
+                <div class="card" style="text-align:center;">
+                    <div class="card-header">⏱️ Full Screen Focus Timer</div>
+                    <h1 id="full-pomo-clock" style="font-size:56px; font-family:monospace; margin:20px 0;">25:00</h1>
+                    <div style="display:flex; gap:10px; justify-content:center;">
+                        <button class="btn-action-small btn-done" onclick="startTimer()">Start</button>
+                        <button class="btn-action-small" style="background:var(--warning); color:white;" onclick="pauseTimer()">Pause</button>
+                        <button class="btn-action-small btn-del" onclick="resetTimer()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <div class="modal-overlay" id="add-new-modal">
@@ -291,7 +409,7 @@
             <h3>Add New Activity</h3>
             <form id="add-new-form" style="margin-top:15px;">
                 <div class="input-group">
-                    <select id="modal-activity-type" required>
+                    <select id="modal-activity-type" required onchange="adjustFormFields(this.value)">
                         <option value="task">Task</option>
                         <option value="class">Class</option>
                         <option value="exam">Exam</option>
@@ -300,14 +418,48 @@
                     </select>
                     <input type="text" id="modal-title" placeholder="Title / Subject Name" required>
                     <input type="text" id="modal-details" placeholder="Details / Chapter Topic" required>
-                    <div style="display:flex; gap:10px;">
-                        <input type="time" id="modal-start-time" required style="flex:1;">
-                        <input type="time" id="modal-end-time" required style="flex:1;">
+                    
+                    <div id="extra-dynamic-fields">
+                        <div style="display:flex; gap:10px;">
+                            <input type="time" id="modal-start-time" required style="flex:1;">
+                            <input type="time" id="modal-end-time" required style="flex:1;">
+                        </div>
                     </div>
                 </div>
                 <button class="btn-add-new" style="width:100%; margin-top:10px;">Save Activity</button>
             </form>
             <button style="background:none; border:none; color:var(--text-muted); cursor:pointer; margin-top:8px;" onclick="closeModal('add-new-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="vip-modal">
+        <div class="modal-card">
+            <h3 style="color: #6D28D9;">👑 VIP Membership Plans</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin:10px 0;">Unlock unlimited features and ad-free experience.</p>
+            
+            <table class="vip-chart-container">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Free Plan</th>
+                        <th>VIP Plan (₹29/Mo)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Study Planner & Tasks</td>
+                        <td>✅ Included</td>
+                        <td>✅ Included</td>
+                    </tr>
+                    <tr>
+                        <td>Calendar & Activities Sync</td>
+                        <td>Basic</td>
+                        <td>⚡ Full Cloud Sync</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn-add-new" style="width: 100%; justify-content: center;" onclick="closeModal('vip-modal')">Close Window</button>
         </div>
     </div>
 
@@ -336,6 +488,19 @@
 
     <script>
         const OWNER_EMAILS = ["ks1007293@gmail.com", "globalharmonypro9052@gmail.com"];
+
+        /* LAUNCH APP FROM LANDING PAGE WITH INTRO SPLASH */
+        function launchAppWithIntro() {
+            document.getElementById('landing-page-view').style.display = 'none';
+            const splash = document.getElementById('splash-screen-view');
+            splash.style.display = 'flex';
+
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.getElementById('app-main-view').style.display = 'flex';
+                showToast("Welcome to MyStudyLife!");
+            }, 1200);
+        }
 
         function toggleDrawer() {
             document.getElementById('drawer-menu').classList.toggle('open');
@@ -401,7 +566,27 @@
         function pauseTimer() { clearInterval(timerInt); timerInt = null; }
         function resetTimer() { pauseTimer(); pomoTime = 25 * 60; updatePomoDisp(); }
 
-        /* PERMANENT STORAGE FOR ALL ACTIVITIES */
+        /* DYNAMIC FORM FIELDS BY TYPE */
+        function adjustFormFields(type) {
+            const extra = document.getElementById('extra-dynamic-fields');
+            if (type === 'vacation') {
+                extra.innerHTML = `
+                    <div style="display:flex; gap:10px;">
+                        <input type="date" id="modal-start-date" required style="flex:1;">
+                        <input type="date" id="modal-end-date" required style="flex:1;">
+                    </div>
+                `;
+            } else {
+                extra.innerHTML = `
+                    <div style="display:flex; gap:10px;">
+                        <input type="time" id="modal-start-time" required style="flex:1;">
+                        <input type="time" id="modal-end-time" required style="flex:1;">
+                    </div>
+                `;
+            }
+        }
+
+        /* PERMANENT STORAGE FOR ALL ACTIVITIES (TASKS, EXAMS, CLASSES, VACATIONS, XTRA) */
         document.getElementById('add-new-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
@@ -410,8 +595,8 @@
                 type: document.getElementById('modal-activity-type').value,
                 title: document.getElementById('modal-title').value,
                 details: document.getElementById('modal-details').value,
-                startTime: document.getElementById('modal-start-time').value,
-                endTime: document.getElementById('modal-end-time').value,
+                startTime: document.getElementById('modal-start-time') ? document.getElementById('modal-start-time').value : '',
+                endTime: document.getElementById('modal-end-time') ? document.getElementById('modal-end-time').value : '',
                 status: 'pending'
             });
             localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
@@ -423,11 +608,17 @@
 
         function renderActivities() {
             let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
-            const dashList = document.getElementById('dash-tasks-list');
-            const tasksList = document.getElementById('all-tasks-list');
             
-            dashList.innerHTML = '';
-            if(tasksList) tasksList.innerHTML = '';
+            const containers = {
+                dashboard: document.getElementById('dash-tasks-list'),
+                task: document.getElementById('all-tasks-list'),
+                exam: document.getElementById('all-exams-list'),
+                class: document.getElementById('all-classes-list'),
+                vacation: document.getElementById('all-vacations-list'),
+                xtra: document.getElementById('all-xtra-list')
+            };
+
+            Object.values(containers).forEach(c => { if(c) c.innerHTML = ''; });
 
             let pendingCount = 0, completedCount = 0;
 
@@ -436,7 +627,7 @@
                 if (a.status === 'completed') completedCount++;
 
                 const html = `
-                    <div class="task-row ${a.status}">
+                    <div class="activity-item-card ${a.status}">
                         <div>
                             <strong style="color:var(--primary);">${a.title}</strong> (${a.type.toUpperCase()}) — ${a.details}<br>
                             <small style="color:var(--text-muted);">⏰ ${a.startTime} - ${a.endTime}</small>
@@ -448,63 +639,9 @@
                     </div>
                 `;
 
-                dashList.innerHTML += html;
-                if(tasksList) tasksList.innerHTML += html;
+                if(containers.dashboard) containers.dashboard.innerHTML += html;
+                if(containers[a.type]) containers[a.type].innerHTML += html;
             });
 
             document.getElementById('dash-pending-count').innerText = pendingCount;
-            document.getElementById('dash-completed-count').innerText = completedCount;
-            document.getElementById('pomo-due-sub').innerText = `${pendingCount} tasks due today.`;
-        }
-
-        function setStatus(id, status) {
-            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
-            activities = activities.map(a => {
-                if (a.id === id) a.status = status;
-                return a;
-            });
-            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
-            renderActivities();
-        }
-
-        function deleteActivity(id) {
-            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]').filter(a => a.id !== id);
-            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
-            renderActivities();
-        }
-
-        /* AUTO DONE AT END TIME */
-        setInterval(() => {
-            const now = new Date();
-            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
-            let updated = false;
-
-            activities.forEach(a => {
-                if (a.status === 'pending' && a.endTime === timeStr && now.getSeconds() === 0) {
-                    a.status = 'completed';
-                    updated = true;
-                    showToast(`⏰ Time Complete! "${a.title}" Auto-Marked Done!`);
-                }
-            });
-
-            if (updated) {
-                localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
-                renderActivities();
-            }
-        }, 1000);
-
-        renderActivities();
-
-        /* CALENDAR GRID */
-        function renderCalendar() {
-            const box = document.getElementById('calendar-grid-box');
-            box.innerHTML = '';
-            for (let i = 1; i <= 31; i++) {
-                box.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.02); border-radius:8px;">${i}</div>`;
-            }
-        }
-        renderCalendar();
-    </script>
-</body>
-</html>
+            document.getElementById
