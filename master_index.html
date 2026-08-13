@@ -1244,7 +1244,7 @@ th{
 }
 </style>
 </head>
-<body>
+<body data-studyflow-build="production-single-file">
 
 <!-- ================================================================
      LANDING PAGE
@@ -5004,5 +5004,14 @@ window.StudyFlow = {
 <!-- MASTER NOTE 1024: FUTURE: add telemetry only with clear privacy controls. -->
 <!-- MASTER NOTE 1025: FUTURE: add performance measurement in production. -->
 <!-- End of single-file StudyFlow master build. -->
+<span data-app-status aria-live="polite" style="position:fixed;left:-9999px"></span>
+<script>
+(() => {
+  window.addEventListener('error', () => {
+    const el = document.querySelector('[data-app-status]');
+    if (el) el.textContent = 'A temporary app error occurred. Refreshing may resolve it.';
+  });
+})();
+</script>
 </body>
 </html>
