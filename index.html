@@ -644,4 +644,58 @@
             });
 
             document.getElementById('dash-pending-count').innerText = pendingCount;
-            document.getElementById
+            document.getElementById('dash-completed-count').innerText = completedCount;
+            document.getElementById('pomo-due-sub').innerText = `${pendingCount} tasks due today.`;
+        }
+
+        function setStatus(id, status) {
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            activities = activities.map(a => {
+                if (a.id === id) a.status = status;
+                return a;
+            });
+            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+            renderActivities();
+        }
+
+        function deleteActivity(id) {
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]').filter(a => a.id !== id);
+            localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+            renderActivities();
+        }
+
+        /* AUTO DONE AT END TIME */
+        setInterval(() => {
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            let activities = JSON.parse(localStorage.getItem('mystudylife_activities') || '[]');
+            let updated = false;
+
+            activities.forEach(a => {
+                if (a.status === 'pending' && a.endTime === timeStr && now.getSeconds() === 0) {
+                    a.status = 'completed';
+                    updated = true;
+                    showToast(`⏰ Time Complete! "${a.title}" Auto-Marked Done!`);
+                }
+            });
+
+            if (updated) {
+                localStorage.setItem('mystudylife_activities', JSON.stringify(activities));
+                renderActivities();
+            }
+        }, 1000);
+
+        renderActivities();
+
+        /* CALENDAR GRID */
+        function renderCalendar() {
+            const box = document.getElementById('calendar-grid-box');
+            box.innerHTML = '';
+            for (let i = 1; i <= 31; i++) {
+                box.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.02); border-radius:8px;">${i}</div>`;
+            }
+        }
+        renderCalendar();
+    </script>
+</body>
+</html>
