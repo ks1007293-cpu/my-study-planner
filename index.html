@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner - All-in-One LMS & Student Hub</title>
+    <title>My Study Planner - Student LMS & Task Manager</title>
 
     <meta name="google-site-verification" content="XouE1kjqG619HkcdFbpVT-3x_Ih0oEd8SkVDrse6lpo" />
 
+    <!-- Google Fonts & FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
@@ -22,7 +24,6 @@
             --primary-dark: #0068D6;
             --primary-light: #EBF5FF;
             --primary-gradient: linear-gradient(135deg, #0084FF 0%, #0052D4 100%);
-            --vip-gradient: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
             --text-main: #0F172A;
             --text-muted: #64748B;
             --border: #E2E8F0;
@@ -43,7 +44,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        /* INTRO LANDING PAGE */
+        /* LANDING INTRO PAGE STYLES */
         #landing-page-view {
             background: #FFFFFF; min-height: 100vh; display: flex; flex-direction: column;
             justify-content: space-between; padding: 25px 20px; text-align: center;
@@ -131,6 +132,8 @@
 
         .timer-btn-group { display: flex; gap: 10px; justify-content: center; }
         .btn-timer { padding: 8px 16px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; font-size: 13px; }
+        .btn-primary-blue { background: var(--primary); color: white; }
+        .btn-light-blue { background: var(--primary-light); color: var(--primary); }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
         .stat-card { background: var(--card-bg); border-radius: 18px; padding: 16px; border: 1px solid var(--border); }
@@ -155,7 +158,7 @@
 
         .badge-tag { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
         .tag-current { background: #E0F2FE; color: #0369A1; }
-        .tag-past { background: #F1F5F9; color: #475569; }
+        .tag-past { background: #D1FAE5; color: #065F46; }
         .tag-overdue { background: #FEE2E2; color: #991B1B; }
 
         .btn-action-small { padding: 6px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 12px; }
@@ -184,6 +187,7 @@
 
     <div id="toast-alert">🎉 Alert</div>
 
+    <!-- 1. LANDING INTRO PAGE -->
     <div id="landing-page-view">
         <div class="landing-header">
             <div class="landing-logo"><i class="fa-solid fa-graduation-cap"></i> MY STUDY PLANNER</div>
@@ -201,10 +205,12 @@
         </div>
     </div>
 
+    <!-- 2. SPLASH TRANSITION -->
     <div id="splash-screen-view">
         <div class="splash-title-text">MY STUDY PLANNER</div>
     </div>
 
+    <!-- 3. MAIN APP INTERFACE -->
     <div id="app-main-view">
         
         <header class="app-header">
@@ -212,6 +218,7 @@
             <button class="btn-hamburger" onclick="toggleDrawer()"><i class="fa-solid fa-bars"></i></button>
         </header>
 
+        <!-- DRAWER MENU -->
         <div class="drawer-overlay" id="drawer-overlay" onclick="toggleDrawer()"></div>
         <div class="drawer-menu" id="drawer-menu">
             <div class="drawer-header">
@@ -245,7 +252,35 @@
 
         <div class="main-wrapper">
 
+            <!-- 1. DASHBOARD -->
             <div id="view-dashboard" class="tab-panel active">
+                
+                <!-- DIRECT QUICK ADD TASK FORM ON DASHBOARD -->
+                <div class="card" style="border-color: var(--primary);">
+                    <div class="card-header" style="color: var(--primary);">➕ Quick Add Task / Exam / Class</div>
+                    <form id="dash-quick-form">
+                        <div class="input-group">
+                            <div style="display:flex; gap:10px;">
+                                <select id="dash-type" style="flex:1;" required>
+                                    <option value="task">Task</option>
+                                    <option value="exam">Exam</option>
+                                    <option value="class">Class</option>
+                                    <option value="vacation">Vacation</option>
+                                    <option value="xtra">Xtra Activity</option>
+                                </select>
+                                <input type="text" id="dash-title" placeholder="Title (e.g. Physics Ch-3)" style="flex:2;" required>
+                            </div>
+                            <input type="text" id="dash-details" placeholder="Topic / Description Details" required>
+                            <div style="display:flex; gap:10px;">
+                                <input type="date" id="dash-due-date" style="flex:1;" required>
+                                <input type="time" id="dash-start-time" style="flex:1;">
+                                <input type="time" id="dash-end-time" style="flex:1;">
+                            </div>
+                        </div>
+                        <button class="btn-add-new" style="width:100%; margin:0;">Save To Schedule</button>
+                    </form>
+                </div>
+
                 <div class="hero-banner-card">
                     <p id="pomo-due-sub">0 items active today.</p>
                     <h2>Good Day.</h2>
@@ -278,11 +313,12 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">📋 Today's Active Schedule & Tasks</div>
+                    <div class="card-header">📋 Active Schedule & Pending List</div>
                     <div id="dash-active-list"></div>
                 </div>
             </div>
 
+            <!-- 2. PROFILE & MARKS CALCULATOR -->
             <div id="view-profile" class="tab-panel">
                 <div class="card" style="text-align:center;">
                     <div style="width:70px; height:70px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 10px;" id="profile-initial">K</div>
@@ -301,6 +337,7 @@
                 </div>
             </div>
 
+            <!-- 3. CALENDAR VIEW -->
             <div id="view-calendar" class="tab-panel">
                 <div class="card">
                     <div class="card-header">📅 Calendar View</div>
@@ -308,40 +345,44 @@
                 </div>
             </div>
 
+            <!-- 4. TASKS VIEW -->
             <div id="view-tasks" class="tab-panel">
                 <div class="card">
                     <div class="card-header">📝 Homework Tasks Manager</div>
                     <div class="filter-bar">
                         <button class="filter-btn active" id="f-task-current" onclick="filterView('task', 'current')">Current</button>
-                        <button class="filter-btn" id="f-task-past" onclick="filterView('task', 'past')">Past</button>
+                        <button class="filter-btn" id="f-task-past" onclick="filterView('task', 'past')">Past / Completed</button>
                         <button class="filter-btn" id="f-task-overdue" onclick="filterView('task', 'overdue')">Overdue</button>
                     </div>
                     <div id="render-tasks-container"></div>
                 </div>
             </div>
 
+            <!-- 5. EXAMS VIEW -->
             <div id="view-exams" class="tab-panel">
                 <div class="card">
                     <div class="card-header">📑 Exam & Quiz Schedule</div>
                     <div class="filter-bar">
                         <button class="filter-btn active" id="f-exam-current" onclick="filterView('exam', 'current')">Current</button>
-                        <button class="filter-btn" id="f-exam-past" onclick="filterView('exam', 'past')">Past</button>
+                        <button class="filter-btn" id="f-exam-past" onclick="filterView('exam', 'past')">Past / Completed</button>
                     </div>
                     <div id="render-exams-container"></div>
                 </div>
             </div>
 
+            <!-- 6. CLASSES VIEW -->
             <div id="view-classes" class="tab-panel">
                 <div class="card">
                     <div class="card-header">📚 Classes & Lectures</div>
                     <div class="filter-bar">
                         <button class="filter-btn active" id="f-class-current" onclick="filterView('class', 'current')">Current</button>
-                        <button class="filter-btn" id="f-class-past" onclick="filterView('class', 'past')">Past</button>
+                        <button class="filter-btn" id="f-class-past" onclick="filterView('class', 'past')">Past / Completed</button>
                     </div>
                     <div id="render-classes-container"></div>
                 </div>
             </div>
 
+            <!-- 7. VACATIONS VIEW -->
             <div id="view-vacations" class="tab-panel">
                 <div class="card">
                     <div class="card-header">⚡ Vacations Planner</div>
@@ -349,6 +390,7 @@
                 </div>
             </div>
 
+            <!-- 8. XTRA VIEW -->
             <div id="view-xtra" class="tab-panel">
                 <div class="card">
                     <div class="card-header">⚡ Extra Academic Activities</div>
@@ -356,6 +398,7 @@
                 </div>
             </div>
 
+            <!-- 9. FOCUS TIMER VIEW -->
             <div id="view-focus-timer" class="tab-panel">
                 <div class="card" style="text-align:center;">
                     <div class="card-header">⏱️ Full Screen Pomodoro Focus Timer</div>
@@ -371,12 +414,13 @@
         </div>
     </div>
 
+    <!-- MODAL POPUP FOR MENU "ADD NEW" -->
     <div class="modal-overlay" id="add-new-modal">
         <div class="modal-card">
             <h3>Add New Activity</h3>
             <form id="global-add-form" style="margin-top:15px;">
                 <div class="input-group">
-                    <select id="modal-activity-type" required onchange="updateFormDynamicFields(this.value)">
+                    <select id="modal-activity-type" required>
                         <option value="task">Task</option>
                         <option value="exam">Exam</option>
                         <option value="class">Class</option>
@@ -388,11 +432,9 @@
                     <input type="text" id="modal-details" placeholder="Details / Description" required>
                     <input type="date" id="modal-due-date" required>
                     
-                    <div id="dynamic-form-fields">
-                        <div style="display:flex; gap:10px;">
-                            <input type="time" id="modal-start-time" style="flex:1;">
-                            <input type="time" id="modal-end-time" style="flex:1;">
-                        </div>
+                    <div style="display:flex; gap:10px;">
+                        <input type="time" id="modal-start-time" style="flex:1;">
+                        <input type="time" id="modal-end-time" style="flex:1;">
                     </div>
                 </div>
                 <button class="btn-add-new" style="width:100%; margin-top:10px;">Save Activity</button>
@@ -401,6 +443,7 @@
         </div>
     </div>
 
+    <!-- OWNER ADMIN PANEL -->
     <div class="modal-overlay" id="admin-modal">
         <div class="modal-card">
             <h3 style="color:var(--primary);">👑 Owner Control Panel</h3>
@@ -495,53 +538,55 @@
             }
         }
 
-        function updateFormDynamicFields(type) {
-            const container = document.getElementById('dynamic-form-fields');
-            if (type === 'exam') {
-                container.innerHTML = `
-                    <input type="text" id="modal-seat" placeholder="Seat Number (Optional)">
-                    <input type="text" id="modal-room" placeholder="Room Number">
-                `;
-            } else if (type === 'class') {
-                container.innerHTML = `
-                    <input type="text" id="modal-teacher" placeholder="Teacher Name">
-                    <input type="text" id="modal-room" placeholder="Room No / Link">
-                `;
-            } else {
-                container.innerHTML = `
-                    <div style="display:flex; gap:10px;">
-                        <input type="time" id="modal-start-time" style="flex:1;">
-                        <input type="time" id="modal-end-time" style="flex:1;">
-                    </div>
-                `;
-            }
-        }
+        /* DIRECT QUICK ADD FORM ON DASHBOARD */
+        document.getElementById('dash-quick-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveActivityItem({
+                type: document.getElementById('dash-type').value,
+                title: document.getElementById('dash-title').value,
+                details: document.getElementById('dash-details').value,
+                dueDate: document.getElementById('dash-due-date').value,
+                startTime: document.getElementById('dash-start-time').value,
+                endTime: document.getElementById('dash-end-time').value
+            });
+            e.target.reset();
+        });
 
-        /* 100% ACTIVE STORAGE ENGINE FOR ALL MODULES (TASKS, EXAMS, CLASSES, VACATIONS, XTRA) */
+        /* MODAL ADD FORM */
         document.getElementById('global-add-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            let storage = JSON.parse(localStorage.getItem('all_planner_activities') || '[]');
-            
-            const todayStr = new Date().toISOString().split('T')[0];
-            const dueDate = document.getElementById('modal-due-date').value;
-
-            storage.push({
-                id: Date.now(),
+            saveActivityItem({
                 type: document.getElementById('modal-activity-type').value,
                 title: document.getElementById('modal-title').value,
                 details: document.getElementById('modal-details').value,
-                dueDate: dueDate,
-                startTime: document.getElementById('modal-start-time') ? document.getElementById('modal-start-time').value : '',
-                endTime: document.getElementById('modal-end-time') ? document.getElementById('modal-end-time').value : '',
-                status: dueDate < todayStr ? 'overdue' : 'current' // Auto-detect Overdue
+                dueDate: document.getElementById('modal-due-date').value,
+                startTime: document.getElementById('modal-start-time').value,
+                endTime: document.getElementById('modal-end-time').value
+            });
+            e.target.reset();
+            closeModal('add-new-modal');
+        });
+
+        /* CENTRAL STORAGE SAVE ENGINE */
+        function saveActivityItem(data) {
+            let storage = JSON.parse(localStorage.getItem('all_planner_activities') || '[]');
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            storage.push({
+                id: Date.now(),
+                type: data.type,
+                title: data.title,
+                details: data.details,
+                dueDate: data.dueDate,
+                startTime: data.startTime || '',
+                endTime: data.endTime || '',
+                status: data.dueDate < todayStr ? 'overdue' : 'current'
             });
 
             localStorage.setItem('all_planner_activities', JSON.stringify(storage));
-            e.target.reset();
-            closeModal('add-new-modal');
             renderAllData();
             showToast("Saved Successfully!");
-        });
+        }
 
         /* DYNAMIC FILTER SYSTEM (CURRENT, PAST, OVERDUE) */
         let activeFilters = { task: 'current', exam: 'current', class: 'current' };
@@ -549,7 +594,8 @@
         function filterView(category, filterType) {
             activeFilters[category] = filterType;
             document.querySelectorAll(`[id^="f-${category}-"]`).forEach(b => b.classList.remove('active'));
-            document.getElementById(`f-${category}-${filterType}`).classList.add('active');
+            const activeBtn = document.getElementById(`f-${category}-${filterType}`);
+            if(activeBtn) activeBtn.classList.add('active');
             renderAllData();
         }
 
@@ -570,12 +616,14 @@
 
             let currentCount = 0, overdueCount = 0, completedCount = 0;
 
+            if(storage.length === 0) {
+                if(containers.dash) containers.dash.innerHTML = `<p style="font-size:12px; color:var(--text-muted); text-align:center;">No activities added yet. Use the form above to add your first task!</p>`;
+            }
+
             storage.forEach(item => {
-                // Auto compute Overdue or Past status
                 let state = item.status;
                 if(state !== 'completed') {
                     if (item.dueDate < todayStr) state = 'overdue';
-                    else if (item.dueDate === todayStr) state = 'current';
                     else state = 'current';
                 }
 
@@ -588,9 +636,10 @@
                 const itemHTML = `
                     <div class="activity-card-item ${state}">
                         <div>
-                            <strong style="color:var(--primary);">${item.title}</strong> 
-                            <span class="badge-tag ${tagClass}">${state}</span><br>
-                            <small style="color:var(--text-muted);">${item.details} | Due: ${item.dueDate}</small>
+                            <strong style="color:var(--primary); font-size:14px;">${item.title}</strong> 
+                            <span class="badge-tag ${tagClass}">${state}</span>
+                            <span style="font-size:10px; font-weight:bold; color:var(--text-muted); text-transform:uppercase;">[${item.type}]</span><br>
+                            <small style="color:var(--text-muted);">${item.details} | Due: ${item.dueDate} ${item.startTime ? '| ⏰ ' + item.startTime + '-' + item.endTime : ''}</small>
                         </div>
                         <div>
                             ${state !== 'completed' ? `<button class="btn-action-small btn-done" onclick="markDone(${item.id})">✓ Done</button>` : ''}
@@ -604,12 +653,13 @@
                     containers.dash.innerHTML += itemHTML;
                 }
 
-                // Render in specific category tab with Filter check
+                // Render in category tab
                 if (containers[item.type]) {
                     const currentFilter = activeFilters[item.type] || 'current';
                     if(currentFilter === 'current' && state === 'current') containers[item.type].innerHTML += itemHTML;
                     else if(currentFilter === 'overdue' && state === 'overdue') containers[item.type].innerHTML += itemHTML;
                     else if(currentFilter === 'past' && (state === 'completed' || item.dueDate < todayStr)) containers[item.type].innerHTML += itemHTML;
+                    else if(item.type === 'vacation' || item.type === 'xtra') containers[item.type].innerHTML += itemHTML;
                 }
             });
 
@@ -627,7 +677,7 @@
             });
             localStorage.setItem('all_planner_activities', JSON.stringify(storage));
             renderAllData();
-            showToast("Marked Done!");
+            showToast("Marked Completed!");
         }
 
         function deleteItem(id) {
